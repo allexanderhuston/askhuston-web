@@ -129,7 +129,7 @@ export default function About() {
               style={{ background: 'rgba(200,56,42,0.10)', border: '1px solid rgba(200,56,42,0.22)' }}
             >
               <div>
-                <p className="font-ui text-sm font-semibold text-[#1a1a1a]">Brief Me</p>
+                <p className="font-ui text-sm font-semibold text-[#1a1a1a]">Let's Build</p>
                 <p className="font-mono text-[11px] text-[#888]">Open for projects &amp; collaborations</p>
               </div>
               <span className="font-mono text-sm text-[#c8382a] group-hover:translate-x-1 transition-transform">→</span>

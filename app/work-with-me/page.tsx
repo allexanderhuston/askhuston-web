@@ -48,7 +48,7 @@ const WHAT_YOU_GET = [
   {
     num: '03',
     title: 'One point of contact.',
-    body: 'No account manager, no middleman. You brief me directly. I deliver directly.',
+    body: "No account manager, no middleman. You brief me directly. I deliver directly.",
   },
 ]
 
@@ -97,36 +97,36 @@ export default function WorkWithMe() {
   }
 
   return (
-    <main className="min-h-screen pt-16 pb-24">
+    <main className="min-h-screen pt-16 pb-12">
 
       {/* Header — same container as portfolio */}
       <motion.div {...fade(0)} className="flex items-baseline gap-4 px-6 md:px-10 pt-10 pb-6">
-        <h1 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] leading-none">brief me</h1>
+        <h1 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] leading-none">let's build</h1>
         <span className="font-mono text-[13px] text-[#c8382a] tracking-[0.12em]">02</span>
       </motion.div>
 
       <div className="px-6 md:px-10 max-w-3xl mx-auto">
 
       {/* Hero */}
-      <motion.div {...fade(0.06)} className="mb-14">
-        <h1 className="font-display text-[clamp(2.4rem,5.5vw,4.2rem)] font-black text-[#1a1a1a] leading-[0.96] mb-6">
+      <motion.div {...fade(0.06)} className="mb-6">
+        <h1 className="font-display text-[clamp(2.4rem,5.5vw,4.2rem)] font-black text-[#1a1a1a] leading-[0.96] mb-3">
           let's make<br />
           <span style={{ color: '#c8382a' }}>something</span><br />
           worth watching.
         </h1>
-        <p className="font-mono text-[13px] text-[#666] leading-relaxed max-w-md">
+        <p className="font-mono text-[12px] text-[#666] leading-relaxed max-w-md">
           AI-native campaigns for brands that want to move culture, not just content calendars.
           Tell me what you're building — I'll tell you how we make it hit.
         </p>
       </motion.div>
 
       {/* What you get */}
-      <motion.div {...fade(0.08)} className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-12">
+      <motion.div {...fade(0.08)} className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
         {WHAT_YOU_GET.map((item) => (
-          <div key={item.num} className="rounded-2xl p-6" style={glass}>
-            <p className="font-mono text-[9px] tracking-[0.18em] text-[#c8382a] uppercase mb-3">{item.num}</p>
-            <p className="font-display text-[15px] font-bold text-[#1a1a1a] mb-2 leading-snug">{item.title}</p>
-            <p className="font-mono text-[11px] text-[#666] leading-relaxed">{item.body}</p>
+          <div key={item.num} className="rounded-2xl p-4" style={glass}>
+            <p className="font-mono text-[9px] tracking-[0.18em] text-[#c8382a] uppercase mb-2">{item.num}</p>
+            <p className="font-display text-[13px] font-bold text-[#1a1a1a] mb-1 leading-snug">{item.title}</p>
+            <p className="font-mono text-[10px] text-[#666] leading-relaxed">{item.body}</p>
           </div>
         ))}
       </motion.div>
@@ -201,7 +201,7 @@ export default function WorkWithMe() {
             </Field>
 
             {/* Project Type */}
-            <div className="px-6 pt-5 pb-5" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+            <div className="px-5 pt-3.5 pb-3.5" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
               <p className="font-mono text-[9px] tracking-[0.2em] text-[#999] uppercase mb-3">What do you need?</p>
               <div className="flex flex-wrap gap-2">
                 {PROJECT_TYPES.map((pt) => {
@@ -231,7 +231,7 @@ export default function WorkWithMe() {
             </div>
 
             {/* Budget */}
-            <div className="px-6 pt-5 pb-5" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+            <div className="px-5 pt-3.5 pb-3.5" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
               <p className="font-mono text-[9px] tracking-[0.2em] text-[#999] uppercase mb-3">Budget range</p>
               <div className="flex flex-wrap gap-2">
                 {BUDGETS.map((b) => {
@@ -282,11 +282,11 @@ export default function WorkWithMe() {
             )}
 
             {/* Submit */}
-            <div className="px-6 py-5">
+            <div className="px-5 py-4">
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="w-full py-4 rounded-2xl font-display text-[15px] font-bold tracking-[0.02em] transition-all duration-200 disabled:opacity-50"
+                className="w-full py-3 rounded-2xl font-display text-[14px] font-bold tracking-[0.02em] transition-all duration-200 disabled:opacity-50"
                 style={{
                   background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
                   color: '#fff',
@@ -304,6 +304,37 @@ export default function WorkWithMe() {
         )}
       </AnimatePresence>
 
+      {/* Calendly */}
+      <motion.a
+        {...fade(0.2)}
+        href="https://calendly.com/allexanderhuston/quick-creative-audit"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group flex items-stretch mt-3 rounded-2xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
+        style={glass}
+      >
+        {/* Time block */}
+        <div
+          className="flex flex-col items-center justify-center px-6 shrink-0"
+          style={{ background: 'rgba(200,56,42,0.07)', borderRight: '1px solid rgba(200,56,42,0.12)' }}
+        >
+          <span className="font-display text-3xl font-black text-[#c8382a] leading-none">15</span>
+          <span className="font-mono text-[9px] text-[#c8382a] tracking-[0.1em] uppercase mt-0.5">min</span>
+        </div>
+
+        {/* Text */}
+        <div className="flex flex-col justify-center px-6 py-4 flex-1">
+          <p className="font-mono text-[9px] tracking-[0.2em] text-[#999] uppercase mb-1">or skip the form</p>
+          <p className="font-display text-[15px] font-bold text-[#1a1a1a] leading-tight">steal my brain</p>
+          <p className="font-mono text-[10px] text-[#aaa] mt-0.5">quick creative audit · free · no pitch</p>
+        </div>
+
+        {/* Arrow */}
+        <div className="flex items-center pr-6">
+          <span className="font-mono text-[#c8382a] text-sm group-hover:translate-x-1 transition-transform">→</span>
+        </div>
+      </motion.a>
+
       </div>
     </main>
   )
@@ -319,7 +350,7 @@ function Field({
   style?: React.CSSProperties
 }) {
   return (
-    <div className="flex flex-col gap-2 px-6 py-5" style={style}>
+    <div className="flex flex-col gap-1.5 px-5 py-3.5" style={style}>
       <p className="font-mono text-[9px] tracking-[0.2em] text-[#999] uppercase">{label}</p>
       {children}
     </div>

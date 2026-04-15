@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 const tabs = [
   { href: '/', label: 'Home' },
   { href: '/portfolio', label: 'Work' },
-  { href: '/work-with-me', label: 'Brief Me' },
+  { href: '/work-with-me', label: "Let's Build" },
   { href: '/the-human', label: 'The Human' },
 ]
 

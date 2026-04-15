@@ -140,7 +140,7 @@ export default function HomeWidgets() {
                 />
                 <div className="w-5 flex items-center justify-center shrink-0 relative z-10"><SendIcon /></div>
                 <div className="flex-1 min-w-0 flex flex-col gap-0.5 relative z-10">
-                  <span className="font-ui text-sm font-semibold text-[#1a1a1a]">Brief Me</span>
+                  <span className="font-ui text-sm font-semibold text-[#1a1a1a]">Let's Build</span>
                   <span className="font-mono text-[11px] text-[#888]">Let&apos;s make something</span>
                 </div>
                 <span className="font-mono text-[11px] text-[#bbb] group-hover:text-[#888] transition-colors shrink-0 relative z-10">02</span>
