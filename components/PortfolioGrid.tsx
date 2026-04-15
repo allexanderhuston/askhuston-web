@@ -1,85 +1,296 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
-import type { Project } from '@/lib/projects'
+import { motion, AnimatePresence } from 'framer-motion'
+import type { Project, ProjectCategory } from '@/lib/projects'
+import type { Photo } from '@/lib/photos'
+import type { Influencer } from '@/lib/influencers'
+import { useCursor } from '@/lib/cursor-context'
+import InfluencerBoard from '@/components/InfluencerBoard'
 
-const glass = {
-  background: 'rgba(255,255,255,0.35)',
-  backdropFilter: 'blur(40px) saturate(200%)',
-  WebkitBackdropFilter: 'blur(40px) saturate(200%)',
-  border: '1px solid rgba(255,255,255,0.5)',
-  boxShadow: '0 8px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8)',
-}
+const VIDEO_FILTERS: { label: string; value: ProjectCategory | 'all' }[] = [
+  { label: 'all', value: 'all' },
+  { label: 'campaign', value: 'Speculative Campaign' },
+  { label: 'ugc', value: 'UGC Series' },
+  { label: 'ai influencer', value: 'AI Influencer' },
+]
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectRow({ project, index }: { project: Project; index: number }) {
+  const { setState } = useCursor()
+  const isEven = index % 2 === 0
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 12 }}
       transition={{ delay: index * 0.06, duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
+      className="rounded-2xl overflow-hidden"
+      style={{
+        background: 'rgba(255,255,255,0.35)',
+        backdropFilter: 'blur(40px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+        border: '1px solid rgba(255,255,255,0.6)',
+        boxShadow: '0 8px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
+      }}
     >
       <Link
         href={`/work/${project.slug}`}
-        className="group flex flex-col rounded-2xl overflow-hidden transition-transform duration-300 hover:-translate-y-1"
-        style={glass}
+        onMouseEnter={() => setState('view-project')}
+        onMouseLeave={() => setState('default')}
+        className={`group flex ${isEven ? 'flex-row' : 'flex-row-reverse'} items-stretch min-h-[320px] md:min-h-[380px]`}
       >
-        {/* Visual — image or gradient */}
-        <div className="relative w-full overflow-hidden" style={{ height: '220px' }}>
+        <div className={`relative w-[55%] overflow-hidden shrink-0 ${isEven ? 'rounded-l-2xl' : 'rounded-r-2xl'}`}>
           {project.coverImage ? (
             <Image
               src={project.coverImage}
               alt={project.brand}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              sizes="55vw"
             />
           ) : (
-            <div className={`absolute inset-0 bg-gradient-to-br ${project.coverGradient} transition-transform duration-500 group-hover:scale-105`}>
-              <div className="absolute inset-0 opacity-20 mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuNjUiIG51bU9jdGF2ZXM9IjMiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==')]" />
-            </div>
+            <div className={`absolute inset-0 bg-gradient-to-br ${project.coverGradient} transition-transform duration-700 group-hover:scale-105`} />
           )}
-
-          {/* In Production badge */}
           {project.status === 'in-progress' && (
             <div
-              className="absolute top-3 right-3 px-3 py-1 rounded-full"
-              style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.3)' }}
+              className="absolute top-4 left-4 px-3 py-1 rounded-full"
+              style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)' }}
             >
-              <span className="font-mono text-[8px] text-white/80 tracking-[0.15em] uppercase">In Production</span>
+              <span className="font-mono text-[8px] text-white/70 tracking-[0.15em] uppercase">In Production</span>
             </div>
           )}
         </div>
 
-        {/* Info */}
-        <div className="flex flex-col gap-1.5 px-5 py-4">
-          <div className="flex items-center justify-between gap-3">
-            <span className="font-ui text-sm font-semibold text-[#1a1a1a] leading-tight">{project.brand}</span>
-            <span
-              className="font-mono text-[9px] tracking-[0.15em] uppercase shrink-0"
-              style={{ color: project.accentColor }}
-            >
+        <div className="flex-1 flex flex-col justify-between px-10 py-10">
+          <div className="flex items-start justify-between gap-4">
+            <span className="font-mono text-[10px] tracking-[0.18em] uppercase" style={{ color: project.accentColor }}>
               {project.category}
             </span>
+            <span className="font-mono text-[11px] text-[#ccc]">
+              {String(index + 1).padStart(2, '0')}
+            </span>
           </div>
-          <p className="font-mono text-[11px] text-[#888] leading-relaxed line-clamp-1">
-            {project.tagline}
-          </p>
+          <div className="flex flex-col gap-3">
+            <p className="font-mono text-[11px] text-[#999]">{project.year}</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1a1a1a] leading-tight group-hover:text-[#c8382a] transition-colors duration-300">
+              {project.brand}
+            </h2>
+            <p className="font-mono text-[12px] text-[#666] leading-relaxed max-w-xs">
+              {project.tagline}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 text-[#bbb] group-hover:text-[#c8382a] transition-colors duration-300">
+            <span className="font-mono text-[10px] tracking-[0.12em] uppercase">view project</span>
+            <span className="text-xs">→</span>
+          </div>
         </div>
       </Link>
     </motion.div>
   )
 }
 
-export default function PortfolioGrid({ projects }: { projects: Project[] }) {
+function PhotoGrid({ photos }: { photos: Photo[] }) {
+  if (photos.length === 0) {
+    return (
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="font-mono text-[12px] text-[#bbb] py-24 text-center"
+      >
+        photos coming soon
+      </motion.p>
+    )
+  }
+
   return (
-    <div className="pt-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        {projects.map((project, i) => (
-          <ProjectCard key={project.slug} project={project} index={i} />
-        ))}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="columns-2 md:columns-3 lg:columns-4 gap-3"
+    >
+      {photos.map((photo, i) => (
+        <motion.div
+          key={photo.src}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.04, duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
+          className="relative mb-3 rounded-xl overflow-hidden break-inside-avoid"
+          style={{
+            background: 'rgba(255,255,255,0.35)',
+            border: '1px solid rgba(255,255,255,0.6)',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+          }}
+        >
+          <Image
+            src={photo.src}
+            alt={photo.alt ?? ''}
+            width={600}
+            height={800}
+            className="w-full h-auto object-cover"
+          />
+        </motion.div>
+      ))}
+    </motion.div>
+  )
+}
+
+type Tab = 'motion' | 'stills'
+
+export default function PortfolioGrid({ projects, photos, influencers }: { projects: Project[]; photos: Photo[]; influencers: Influencer[] }) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const [tab, setTab] = useState<Tab>((searchParams.get('tab') as Tab) ?? 'motion')
+  const [activeFilter, setActiveFilter] = useState<ProjectCategory | 'all'>(
+    (searchParams.get('filter') as ProjectCategory | 'all') ?? 'all'
+  )
+
+  // Sync state → URL whenever tab or filter changes
+  useEffect(() => {
+    const params = new URLSearchParams()
+    if (tab !== 'motion') params.set('tab', tab)
+    if (activeFilter !== 'all') params.set('filter', activeFilter)
+    const qs = params.toString()
+    router.replace(qs ? `/portfolio?${qs}` : '/portfolio', { scroll: false })
+  }, [tab, activeFilter])
+
+  const filtered = activeFilter === 'all' ? projects : projects.filter(p => p.category === activeFilter)
+
+  return (
+    <div>
+      {/* Header */}
+      <div className="flex items-baseline gap-4 px-6 md:px-10 pt-10 pb-6">
+        <h1 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] leading-none">work</h1>
+        <span className="font-mono text-[13px] text-[#c8382a] tracking-[0.12em]">01</span>
+        {tab === 'motion' && (
+          <span className="font-mono text-[10px] text-[#bbb] tracking-[0.15em] uppercase ml-auto">
+            {filtered.length} {filtered.length === 1 ? 'project' : 'projects'}
+          </span>
+        )}
+        {tab === 'stills' && (
+          <span className="font-mono text-[10px] text-[#bbb] tracking-[0.15em] uppercase ml-auto">
+            {photos.length} {photos.length === 1 ? 'photo' : 'photos'}
+          </span>
+        )}
       </div>
+
+      {/* Tab toggle */}
+      <div className="px-6 md:px-10 pb-5 flex items-center gap-1">
+        <div
+          className="flex items-center gap-1 p-1 rounded-full"
+          style={{
+            background: 'rgba(255,255,255,0.4)',
+            border: '1px solid rgba(255,255,255,0.6)',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+          }}
+        >
+          {(['motion', 'stills'] as Tab[]).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className="relative px-5 py-1.5 rounded-full font-display text-[12px] font-medium transition-colors duration-200"
+              style={{ color: tab === t ? '#1a1a1a' : '#999' }}
+            >
+              {tab === t && (
+                <motion.span
+                  layoutId="tab-pill"
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: 'rgba(255,255,255,0.85)',
+                    border: '1px solid rgba(255,255,255,1)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,1)',
+                  }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 42 }}
+                />
+              )}
+              <span className="relative z-10">{t}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <AnimatePresence mode="wait">
+        {tab === 'motion' && (
+          <motion.div
+            key="motion"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+          >
+            {/* Video filters */}
+            <div className="px-6 md:px-10 pb-6 flex flex-wrap gap-2">
+              {VIDEO_FILTERS.map(({ label, value }) => (
+                <button
+                  key={value}
+                  onClick={() => setActiveFilter(value)}
+                  className="relative px-4 py-1.5 rounded-full font-mono text-[10px] tracking-[0.1em] transition-colors duration-200"
+                  style={{ color: activeFilter === value ? '#1a1a1a' : '#999' }}
+                >
+                  {activeFilter === value && (
+                    <motion.span
+                      layoutId="filter-pill"
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: 'rgba(255,255,255,0.7)',
+                        border: '1px solid rgba(255,255,255,0.9)',
+                        boxShadow: '0 2px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,1)',
+                      }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 42 }}
+                    />
+                  )}
+                  <span className="relative z-10">{label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Influencer board or project rows */}
+            {activeFilter === 'AI Influencer' ? (
+              <div className="px-6 md:px-10 pb-10">
+                <InfluencerBoard influencers={influencers} />
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3 px-6 md:px-10 pb-10">
+                <AnimatePresence mode="popLayout">
+                  {filtered.map((project, i) => (
+                    <ProjectRow key={project.slug} project={project} index={i} />
+                  ))}
+                  {filtered.length === 0 && (
+                    <motion.p
+                      key="empty"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="font-mono text-[12px] text-[#bbb] py-16 text-center"
+                    >
+                      nothing here yet — check back soon
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {tab === 'stills' && (
+          <motion.div
+            key="stills"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+            className="px-6 md:px-10 pb-10"
+          >
+            <PhotoGrid photos={photos} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import HomeEmailRow from '@/components/HomeEmailRow'
+import FloatingHead from '@/components/FloatingHead'
 
 const glass = {
   background: 'rgba(255,255,255,0.35)',
@@ -93,6 +94,8 @@ export default function HomeWidgets() {
       style={{ background: 'transparent' }}
     >
 
+      <FloatingHead />
+
       {/* ── Centered column: email + main card ── */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="flex flex-col gap-2 w-[400px] px-4">
@@ -108,33 +111,29 @@ export default function HomeWidgets() {
           </motion.div>
 
           {/* Main card */}
-          <motion.div
-            {...drag}
-            dragConstraints={containerRef}
-            className="cursor-grab active:cursor-grabbing rounded-3xl"
+          <div
+            className="rounded-3xl"
             style={{ ...glass, overflow: 'hidden' }}
           >
             {/* Portfolio */}
             <div className="px-2 pt-1.5 pb-0.5">
-              <Link href="/portfolio" onPointerDownCapture={(e) => e.stopPropagation()} className="flex items-center gap-3 px-4 py-2 rounded-full transition-all group relative"
-                style={{ ['--hover-bg' as string]: 'rgba(255,255,255,0.95)' }}
-              >
+              <Link href="/portfolio" className="flex items-center gap-3 px-4 py-2 rounded-full transition-all group relative">
                 <motion.span
                   className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                   style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.6)', boxShadow: '0 0 20px rgba(255,255,255,0.5), inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 8px rgba(0,0,0,0.05)' }}
                 />
                 <div className="w-5 flex items-center justify-center shrink-0 relative z-10"><SparklesIcon /></div>
                 <div className="flex-1 min-w-0 flex flex-col gap-0.5 relative z-10">
-                  <span className="font-ui text-sm font-semibold text-[#1a1a1a]">The Work</span>
+                  <span className="font-ui text-sm font-semibold text-[#1a1a1a]">Work</span>
                   <span className="font-mono text-[11px] text-[#888]">See what&apos;s possible</span>
                 </div>
-                <span className="font-mono text-xs text-[#888] group-hover:text-[#444] transition-colors shrink-0 relative z-10">View →</span>
+                <span className="font-mono text-[11px] text-[#bbb] group-hover:text-[#888] transition-colors shrink-0 relative z-10">01</span>
               </Link>
             </div>
 
             {/* Work with Me */}
             <div className="px-2">
-              <Link href="/work-with-me" onPointerDownCapture={(e) => e.stopPropagation()} className="flex items-center gap-3 px-4 py-2 rounded-full transition-all group relative">
+              <Link href="/work-with-me" className="flex items-center gap-3 px-4 py-2 rounded-full transition-all group relative">
                 <motion.span
                   className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                   style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.6)', boxShadow: '0 0 20px rgba(255,255,255,0.5), inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 8px rgba(0,0,0,0.05)' }}
@@ -144,13 +143,13 @@ export default function HomeWidgets() {
                   <span className="font-ui text-sm font-semibold text-[#1a1a1a]">Brief Me</span>
                   <span className="font-mono text-[11px] text-[#888]">Let&apos;s make something</span>
                 </div>
-                <span className="font-mono text-xs text-[#888] group-hover:text-[#444] transition-colors shrink-0 relative z-10">Contact →</span>
+                <span className="font-mono text-[11px] text-[#bbb] group-hover:text-[#888] transition-colors shrink-0 relative z-10">02</span>
               </Link>
             </div>
 
             {/* About */}
             <div className="px-2 pb-1.5">
-              <Link href="/about" onPointerDownCapture={(e) => e.stopPropagation()} className="flex items-center gap-3 px-4 py-2 rounded-full transition-all group relative">
+              <Link href="/the-human" className="flex items-center gap-3 px-4 py-2 rounded-full transition-all group relative">
                 <motion.span
                   className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                   style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.6)', boxShadow: '0 0 20px rgba(255,255,255,0.5), inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 8px rgba(0,0,0,0.05)' }}
@@ -160,13 +159,13 @@ export default function HomeWidgets() {
                   <span className="font-ui text-sm font-semibold text-[#1a1a1a]">The Human</span>
                   <span className="font-mono text-[11px] text-[#888]">AI Creative Director</span>
                 </div>
-                <span className="font-mono text-xs text-[#888] group-hover:text-[#444] transition-colors shrink-0 relative z-10">More →</span>
+                <span className="font-mono text-[11px] text-[#bbb] group-hover:text-[#888] transition-colors shrink-0 relative z-10">03</span>
               </Link>
             </div>
 
             {/* Social */}
             <div className="px-6 py-6">
-              <p className="font-mono text-[10px] tracking-[0.15em] text-[#999] uppercase mb-4">Follow for more</p>
+              <p className="font-mono text-[10px] tracking-[0.15em] text-[#999] mb-4">follow for more</p>
               <div className="grid grid-cols-2 gap-x-4 gap-y-4">
                 {[
                   { icon: <InstaIcon />, label: 'Instagram', href: 'https://instagram.com/askhuston' },
@@ -183,12 +182,7 @@ export default function HomeWidgets() {
               </div>
             </div>
 
-            {/* Bottom tag */}
-            <div className="px-6 py-4 flex items-center justify-between" style={{ borderTop: '1px solid rgba(255,255,255,0.2)' }}>
-              <span className="font-mono text-[10px] text-[#999] tracking-wider">@askhuston</span>
-              <span className="font-mono text-[10px] text-[#999] tracking-wider">AI Creative Director</span>
-            </div>
-          </motion.div>
+          </div>
 
         </div>
       </div>

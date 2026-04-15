@@ -35,8 +35,15 @@ const skills = [
 
 export default function About() {
   return (
-    <main className="min-h-screen pt-20 pb-16 px-4 md:px-6">
-      <div className="max-w-5xl mx-auto">
+    <main className="min-h-screen pt-16 pb-16">
+
+      {/* Header — same container as portfolio */}
+      <motion.div {...fade(0)} className="flex items-baseline gap-4 px-6 md:px-10 pt-10 pb-6">
+        <h1 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] leading-none">the human</h1>
+        <span className="font-mono text-[13px] text-[#c8382a] tracking-[0.12em]">03</span>
+      </motion.div>
+
+      <div className="max-w-5xl mx-auto px-6 md:px-10">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3 items-start">
 
           {/* ── LEFT — big bio card ── */}
@@ -47,12 +54,9 @@ export default function About() {
           >
             {/* Name + label */}
             <div>
-              <p className="font-mono text-[10px] tracking-[0.25em] text-[#c8382a] uppercase mb-3">
-                The Human
-              </p>
-              <h1 className="font-ui text-4xl md:text-5xl font-bold text-[#1a1a1a] leading-tight">
+              <h2 className="font-ui text-4xl md:text-5xl font-bold text-[#1a1a1a] leading-tight">
                 Alex Boyanov
-              </h1>
+              </h2>
               <p className="font-mono text-[11px] text-[#999] mt-1">Sofia, Bulgaria — works globally</p>
             </div>
 

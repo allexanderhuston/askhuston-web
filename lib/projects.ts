@@ -1,8 +1,8 @@
 export type ProjectCategory =
   | 'Speculative Campaign'
-  | 'Short Film'
   | 'UGC Series'
-  | 'Product Photography'
+  | 'Photography'
+  | 'AI Influencer'
 
 export type Project = {
   slug: string
@@ -51,7 +51,7 @@ const projects: Project[] = [
     title: 'Mine',
     brand: 'Soul 13 Pilates',
     year: 2025,
-    category: 'Short Film',
+    category: 'Speculative Campaign',
     tagline:
       'A 60-second brand film for a pilates studio. Shot entirely in AI. Jacquemus visual language. Extreme close-ups only.',
     brief:
@@ -116,7 +116,7 @@ const projects: Project[] = [
     title: 'Tokyo',
     brand: 'The Culture',
     year: 2026,
-    category: 'Short Film',
+    category: 'Speculative Campaign',
     coverImage: '/projects/the-culture-tokyo.png',
     tagline:
       'A cinematic short film for the brand that started everything. The last document. In production.',

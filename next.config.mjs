@@ -12,7 +12,7 @@ const nextConfig = {
     return [
       { source: '/work', destination: '/portfolio', permanent: true },
       { source: '/contact', destination: '/work-with-me', permanent: true },
-      { source: '/about', destination: '/', permanent: true },
+      { source: '/about', destination: '/the-human', permanent: false },
     ]
   },
 }

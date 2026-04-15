@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import type { Project } from '@/lib/projects'
+import { useCursor } from '@/lib/cursor-context'
 
 interface WorkCardProps {
   project: Project
@@ -20,6 +21,8 @@ const glass = {
 }
 
 export default function WorkCard({ project, index, isDragging }: WorkCardProps) {
+  const { setState } = useCursor()
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 24 }}
@@ -30,6 +33,8 @@ export default function WorkCard({ project, index, isDragging }: WorkCardProps) 
       <Link
         href={`/work/${project.slug}`}
         onClick={(e) => { if (isDragging?.current) e.preventDefault() }}
+        onMouseEnter={() => setState('view-project')}
+        onMouseLeave={() => setState('default')}
         className="group flex flex-col h-full rounded-2xl overflow-hidden"
         style={glass}
       >

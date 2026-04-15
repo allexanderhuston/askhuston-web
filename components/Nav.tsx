@@ -7,9 +7,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 const tabs = [
   { href: '/', label: 'Home' },
-  { href: '/portfolio', label: 'The Work' },
+  { href: '/portfolio', label: 'Work' },
   { href: '/work-with-me', label: 'Brief Me' },
-  { href: '/about', label: 'The Human' },
+  { href: '/the-human', label: 'The Human' },
 ]
 
 export default function Nav() {
@@ -45,7 +45,7 @@ export default function Nav() {
             <Link
               key={tab.href}
               href={tab.href}
-              className="relative px-5 py-2 rounded-full font-mono text-[11px] tracking-[0.08em] transition-colors duration-150"
+              className="relative px-5 py-2 rounded-full font-display text-[12px] font-medium tracking-[0.02em] transition-colors duration-150"
               style={{ color: isActive(tab.href) ? '#1a1a1a' : '#888' }}
             >
               {isActive(tab.href) && (

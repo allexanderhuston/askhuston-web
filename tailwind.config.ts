@@ -19,9 +19,11 @@ const config: Config = {
         gold: '#c9a84c',
       },
       fontFamily: {
-        display: ['var(--font-playfair)', 'Georgia', 'serif'],
-        ui: ['var(--font-syne)', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-dm-mono)', 'monospace'],
+        display: ['var(--font-display)', 'Georgia', 'serif'],
+        body:    ['var(--font-body)', 'system-ui', 'sans-serif'],
+        // keep old aliases pointing to body so existing classes don't break
+        ui:      ['var(--font-body)', 'system-ui', 'sans-serif'],
+        mono:    ['var(--font-body)', 'system-ui', 'sans-serif'],
       },
       letterSpacing: {
         widest: '0.25em',

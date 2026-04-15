@@ -45,7 +45,7 @@ export default function HomeEmailRow() {
     return (
       <div className="flex items-center gap-3 px-5 py-3">
         <MailIcon />
-        <span className="font-mono text-xs text-accent flex-1">You&apos;re in. I&apos;ll be in touch.</span>
+        <span className="font-mono text-xs text-accent flex-1">prompts on the way 🤫</span>
       </div>
     )
   }
@@ -53,15 +53,18 @@ export default function HomeEmailRow() {
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-3 px-5 py-3">
       <MailIcon />
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Stay in the loop — enter your email"
-        required
-        className="flex-1 bg-transparent font-mono text-[11px] focus:outline-none min-w-0"
-        style={{ color: '#1a1a1a' }}
-      />
+      <div className="flex-1 min-w-0 relative flex items-center">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="your email › my secret prompts, no cap"
+          required
+          className="w-full bg-transparent font-mono text-[11px] focus:outline-none min-w-0 pr-5"
+          style={{ color: '#1a1a1a' }}
+        />
+        {!email && <span className="absolute right-0 text-base leading-none pointer-events-none">🧢</span>}
+      </div>
       <button
         type="submit"
         disabled={status === 'loading'}

@@ -1,25 +1,23 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, DM_Mono, Syne } from 'next/font/google'
+import { Space_Grotesk, Courier_Prime } from 'next/font/google'
 import './globals.css'
 import SiteShell from '@/components/SiteShell'
 import AnimatedBackground from '@/components/AnimatedBackground'
+import CustomCursor from '@/components/CustomCursor'
+import { CursorProvider } from '@/lib/cursor-context'
 
-const playfair = Playfair_Display({
+const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
-  variable: '--font-playfair',
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-display',
   display: 'swap',
 })
 
-const dmMono = DM_Mono({
+const courierPrime = Courier_Prime({
   subsets: ['latin'],
-  weight: ['300', '400', '500'],
-  variable: '--font-dm-mono',
-  display: 'swap',
-})
-
-const syne = Syne({
-  subsets: ['latin'],
-  variable: '--font-syne',
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-body',
   display: 'swap',
 })
 
@@ -88,11 +86,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${dmMono.variable} ${syne.variable}`}
+      className={`${spaceGrotesk.variable} ${courierPrime.variable}`}
     >
-      <body className="text-text font-mono min-h-screen flex flex-col">
-        <AnimatedBackground />
-        <SiteShell>{children}</SiteShell>
+      <body className="text-text font-body min-h-screen flex flex-col">
+        <CursorProvider>
+          <AnimatedBackground />
+          <CustomCursor />
+          <SiteShell>{children}</SiteShell>
+        </CursorProvider>
       </body>
     </html>
   )
