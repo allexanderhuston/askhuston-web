@@ -28,10 +28,10 @@ export default function Footer() {
             LinkedIn
           </a>
           <Link
-            href="/contact"
+            href="/work-with-me"
             className="font-mono text-xs text-muted hover:text-accent transition-colors tracking-wider"
           >
-            alex@askhuston.com
+            Work with Me
           </Link>
         </div>
       </div>

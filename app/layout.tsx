@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, DM_Mono, Syne } from 'next/font/google'
 import './globals.css'
-import Nav from '@/components/Nav'
-import Footer from '@/components/Footer'
+import SiteShell from '@/components/SiteShell'
+import AnimatedBackground from '@/components/AnimatedBackground'
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -90,10 +90,9 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${dmMono.variable} ${syne.variable}`}
     >
-      <body className="bg-bg text-text font-mono min-h-screen flex flex-col">
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Footer />
+      <body className="text-text font-mono min-h-screen flex flex-col">
+        <AnimatedBackground />
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   )

@@ -15,6 +15,7 @@ export type Project = {
   approach: string
   tools: string[]
   coverGradient: string
+  coverImage?: string
   accentColor: string
   videoUrl?: string
   embedType?: 'youtube' | 'vimeo'
@@ -116,6 +117,7 @@ const projects: Project[] = [
     brand: 'The Culture',
     year: 2026,
     category: 'Short Film',
+    coverImage: '/projects/the-culture-tokyo.png',
     tagline:
       'A cinematic short film for the brand that started everything. The last document. In production.',
     brief:
