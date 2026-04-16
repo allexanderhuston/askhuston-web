@@ -6,9 +6,13 @@ import { getAllInfluencers } from '@/lib/influencers'
 import PortfolioGrid from '@/components/PortfolioGrid'
 
 export const metadata: Metadata = {
-  title: 'Portfolio — @askhuston',
+  title: 'Work',
   description:
-    'AI-generated campaigns for fashion, lifestyle, and beverage brands.',
+    'Campaign films, UGC series, AI influencers and brand identities. AI-native creative production for fashion, lifestyle, and beverage brands.',
+  openGraph: {
+    title: 'Work — Alexander Huston',
+    description: 'Campaign films, UGC series, AI influencers and brand identities.',
+  },
 }
 
 export default function Portfolio() {

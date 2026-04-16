@@ -13,8 +13,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = getProjectBySlug(params.slug)
   if (!project) return {}
   return {
-    title: `${project.brand} — @askhuston`,
+    title: project.brand,
     description: project.tagline,
+    openGraph: {
+      title: `${project.brand} — Alexander Huston`,
+      description: project.tagline,
+      type: 'article',
+      ...(project.coverImage ? { images: [{ url: project.coverImage, alt: project.brand }] } : {}),
+    },
   }
 }
 

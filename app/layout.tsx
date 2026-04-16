@@ -23,48 +23,53 @@ const courierPrime = Courier_Prime({
   display: 'swap',
 })
 
+const SITE_URL = 'https://askhuston.com'
+const OG_DESCRIPTION = "AI-powered creative direction. Campaigns that feel real, cost less than a studio, and don't look generated. Based in Sofia. Built for everywhere."
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Alex Boyanov — AI Creative Director',
-    template: '%s — @askhuston',
+    default: 'Alexander Huston — Creative Director',
+    template: '%s — Alexander Huston',
   },
-  description:
-    'AI Creative Director based in Sofia. I make hyper-realistic campaigns for fashion, lifestyle, and beverage brands — no studio, no crew, full production value.',
+  description: OG_DESCRIPTION,
   keywords: [
+    'Alexander Huston',
+    'askhuston',
     'AI Creative Director',
-    'AI campaigns',
-    'fashion campaigns',
+    'AI campaign production',
+    'AI brand films',
     'AI video production',
-    'brand films',
-    'AI filmmaking',
-    'Kling',
-    'Higgsfield',
+    'creative director Sofia',
+    'AI generated campaigns',
+    'brand content AI',
+    'AI influencer',
+    'campaign films',
+    'fashion campaigns AI',
   ],
-  authors: [{ name: 'Alex Boyanov', url: 'https://askhuston.com' }],
-  creator: 'Alex Boyanov',
+  authors: [{ name: 'Alexander Huston', url: SITE_URL }],
+  creator: 'Alexander Huston',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://askhuston.com',
-    siteName: '@askhuston',
-    title: 'Alex Boyanov — AI Creative Director',
-    description:
-      "I make campaigns that don't look AI-generated. Fashion, lifestyle, beverage — no studio required.",
+    url: SITE_URL,
+    siteName: 'Alexander Huston',
+    title: 'Alexander Huston — Creative Director',
+    description: OG_DESCRIPTION,
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Alex Boyanov — AI Creative Director',
+        alt: 'Alexander Huston — Creative Director',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Alex Boyanov — AI Creative Director',
-    description:
-      "I make campaigns that don't look AI-generated. Fashion, lifestyle, beverage — no studio required.",
-    images: ['/og-image.jpg'],
+    title: 'Alexander Huston — Creative Director',
+    description: OG_DESCRIPTION,
+    images: ['/opengraph-image'],
     creator: '@askhuston',
   },
   robots: {
@@ -93,6 +98,46 @@ export default function RootLayout({
       <body className="text-text font-body min-h-screen flex flex-col">
         {/* Anti-FOUC: apply saved theme before paint */}
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}` }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                '@context': 'https://schema.org',
+                '@type': 'Person',
+                name: 'Alexander Huston',
+                alternateName: 'askhuston',
+                url: 'https://askhuston.com',
+                image: 'https://askhuston.com/alex.png',
+                jobTitle: 'Creative Director',
+                description: "AI-powered creative direction. Campaigns that feel real, cost less than a studio, and don't look generated.",
+                sameAs: [
+                  'https://www.linkedin.com/in/alexanderboyanov/',
+                  'https://www.instagram.com/askhuston',
+                ],
+                knowsAbout: [
+                  'Creative Direction',
+                  'AI Campaign Production',
+                  'Brand Films',
+                  'Art Direction',
+                  'Video Production',
+                  'Brand Strategy',
+                ],
+              },
+              {
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: 'Alexander Huston',
+                url: 'https://askhuston.com',
+                description: "AI-powered creative direction. Campaigns that feel real, cost less than a studio, and don't look generated.",
+                author: {
+                  '@type': 'Person',
+                  name: 'Alexander Huston',
+                },
+              },
+            ]),
+          }}
+        />
         <ThemeProvider>
           <LoadingProvider>
           <CursorProvider>

@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import HomeWidgets from '@/components/HomeWidgets'
 
 export const metadata: Metadata = {
-  title: 'Alex Boyanov — AI Creative Director',
+  title: 'Alexander Huston — Creative Director',
   description:
-    'AI Creative Director based in Sofia. Hyper-realistic campaigns for fashion, lifestyle, and beverage brands.',
+    "AI-powered creative direction. Campaigns that feel real, cost less than a studio, and don't look generated. Based in Sofia. Built for everywhere.",
 }
 
 export default function Home() {
