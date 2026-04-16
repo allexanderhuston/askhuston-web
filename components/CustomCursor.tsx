@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion'
 import { useCursor } from '@/lib/cursor-context'
 
@@ -8,26 +8,32 @@ export default function CustomCursor() {
   const { state } = useCursor()
   const isHover = state === 'view-project'
 
-  // Dot — snaps instantly to mouse
+  // Detect touch device — initialised synchronously to avoid flash
+  const [isTouch] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+  )
+
   const dotX = useMotionValue(-100)
   const dotY = useMotionValue(-100)
-
-  // Trail — lags behind for comet effect
   const trailX = useSpring(dotX, { stiffness: 80, damping: 20, mass: 0.8 })
   const trailY = useSpring(dotY, { stiffness: 80, damping: 20, mass: 0.8 })
 
   useEffect(() => {
+    if (isTouch) return
     const onMove = (e: MouseEvent) => {
       dotX.set(e.clientX)
       dotY.set(e.clientY)
     }
     window.addEventListener('mousemove', onMove)
     return () => window.removeEventListener('mousemove', onMove)
-  }, [dotX, dotY])
+  }, [dotX, dotY, isTouch])
+
+  // All hooks called above — safe to return null now
+  if (isTouch) return null
 
   return (
     <>
-      {/* Blurred trail — lags behind */}
+      {/* Blurred trail */}
       <motion.div
         style={{
           position: 'fixed',
@@ -44,7 +50,7 @@ export default function CustomCursor() {
         }}
       />
 
-      {/* Dot — snaps + label */}
+      {/* Dot */}
       <motion.div
         style={{
           position: 'fixed',
@@ -69,7 +75,6 @@ export default function CustomCursor() {
             flexShrink: 0,
           }}
         />
-
         <AnimatePresence>
           {isHover && (
             <motion.span

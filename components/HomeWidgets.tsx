@@ -152,7 +152,7 @@ export default function HomeWidgets() {
 
       {/* ── Centered column: email + main card ── */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="flex flex-col gap-2 w-[400px] px-4">
+        <div className="flex flex-col gap-2 w-full max-w-[400px] px-4 md:-translate-y-0 -translate-y-[8vh]">
 
           {/* Email block — drops from top on return */}
           <motion.div

@@ -53,62 +53,108 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       className="rounded-2xl overflow-hidden"
-      style={{
-        rotateX: springX,
-        rotateY: springY,
-        perspective: 1000,
-        ...glass,
-      }}
+      style={{ rotateX: springX, rotateY: springY, perspective: 1000, ...glass }}
     >
       <Link
         href={`/work/${project.slug}`}
         onMouseEnter={() => setState('view-project')}
         onMouseLeave={() => setState('default')}
-        className={`group flex ${isEven ? 'flex-row' : 'flex-row-reverse'} items-stretch min-h-[320px] md:min-h-[380px]`}
+        className="group block"
       >
-        <div className={`relative w-[55%] overflow-hidden shrink-0 ${isEven ? 'rounded-l-2xl' : 'rounded-r-2xl'}`}>
+        {/* ── Mobile: full-bleed image + gradient overlay ── */}
+        <div className="md:hidden relative w-full aspect-[4/5] overflow-hidden rounded-2xl">
           {project.coverImage ? (
             <Image
               src={project.coverImage}
               alt={project.brand}
               fill
               className="object-cover transition-transform duration-700 group-hover:scale-105"
-              sizes="55vw"
+              sizes="100vw"
             />
           ) : (
-            <div className={`absolute inset-0 bg-gradient-to-br ${project.coverGradient} transition-transform duration-700 group-hover:scale-105`} />
+            <div className={`absolute inset-0 bg-gradient-to-br ${project.coverGradient}`} />
           )}
+          {/* gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+
+          {/* in-progress badge */}
           {project.status === 'in-progress' && (
             <div
               className="absolute top-4 left-4 px-3 py-1 rounded-full"
-              style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)' }}
+              style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)' }}
             >
               <span className="font-mono text-[8px] text-white/70 tracking-[0.15em] uppercase">In Production</span>
             </div>
           )}
-        </div>
 
-        <div className="flex-1 flex flex-col justify-between px-10 py-10">
-          <div className="flex items-start justify-between gap-4">
-            <span className="font-mono text-[10px] tracking-[0.18em] uppercase" style={{ color: project.accentColor }}>
+          {/* index */}
+          <span className="absolute top-4 right-4 font-mono text-[11px] text-white/40">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+
+          {/* info at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-1.5">
+            <span className="font-mono text-[9px] tracking-[0.18em] uppercase" style={{ color: project.accentColor }}>
               {project.category}
             </span>
-            <span className="font-mono text-[11px] text-t7">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-          </div>
-          <div className="flex flex-col gap-3">
-            <p className="font-mono text-[11px] text-t5">{project.year}</p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-t1 leading-tight group-hover:text-[#c8382a] transition-colors duration-300">
+            <h2 className="font-display text-2xl font-bold text-white leading-tight">
               {project.brand}
             </h2>
-            <p className="font-mono text-[12px] text-t3 leading-relaxed max-w-xs">
+            <p className="font-mono text-[11px] text-white/60 leading-relaxed line-clamp-2">
               {project.tagline}
             </p>
+            <div className="flex items-center gap-1.5 text-white/50 group-hover:text-white transition-colors duration-300 mt-1">
+              <span className="font-mono text-[9px] tracking-[0.12em] uppercase">view project</span>
+              <span className="text-xs">→</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-t6 group-hover:text-[#c8382a] transition-colors duration-300">
-            <span className="font-mono text-[10px] tracking-[0.12em] uppercase">view project</span>
-            <span className="text-xs">→</span>
+        </div>
+
+        {/* ── Desktop: side-by-side layout ── */}
+        <div className={`hidden md:flex ${isEven ? 'flex-row' : 'flex-row-reverse'} items-stretch min-h-[380px]`}>
+          <div className={`relative w-[55%] overflow-hidden shrink-0 ${isEven ? 'rounded-l-2xl' : 'rounded-r-2xl'}`}>
+            {project.coverImage ? (
+              <Image
+                src={project.coverImage}
+                alt={project.brand}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="55vw"
+              />
+            ) : (
+              <div className={`absolute inset-0 bg-gradient-to-br ${project.coverGradient} transition-transform duration-700 group-hover:scale-105`} />
+            )}
+            {project.status === 'in-progress' && (
+              <div
+                className="absolute top-4 left-4 px-3 py-1 rounded-full"
+                style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)' }}
+              >
+                <span className="font-mono text-[8px] text-white/70 tracking-[0.15em] uppercase">In Production</span>
+              </div>
+            )}
+          </div>
+          <div className="flex-1 flex flex-col justify-between px-10 py-10">
+            <div className="flex items-start justify-between gap-4">
+              <span className="font-mono text-[10px] tracking-[0.18em] uppercase" style={{ color: project.accentColor }}>
+                {project.category}
+              </span>
+              <span className="font-mono text-[11px] text-t7">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+            </div>
+            <div className="flex flex-col gap-3">
+              <p className="font-mono text-[11px] text-t5">{project.year}</p>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-t1 leading-tight group-hover:text-[#c8382a] transition-colors duration-300">
+                {project.brand}
+              </h2>
+              <p className="font-mono text-[12px] text-t3 leading-relaxed max-w-xs">
+                {project.tagline}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-t6 group-hover:text-[#c8382a] transition-colors duration-300">
+              <span className="font-mono text-[10px] tracking-[0.12em] uppercase">view project</span>
+              <span className="text-xs">→</span>
+            </div>
           </div>
         </div>
       </Link>

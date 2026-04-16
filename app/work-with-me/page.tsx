@@ -196,7 +196,7 @@ export default function WorkWithMe() {
             {/* Project Type */}
             <div className="px-5 pt-3.5 pb-3.5" style={{ borderBottom: '1px solid var(--divider)' }}>
               <p className="font-mono text-[9px] tracking-[0.2em] text-t5 uppercase mb-3">What do you need?</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 {PROJECT_TYPES.map((pt) => {
                   const active = form.projectTypes.includes(pt.label)
                   return (
@@ -206,7 +206,7 @@ export default function WorkWithMe() {
                       onClick={() => toggleProjectType(pt.label)}
                       whileTap={{ scale: 0.92 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 18 }}
-                      className="flex flex-col items-start px-4 py-2.5 rounded-xl transition-all duration-200"
+                      className="flex flex-col items-start px-4 py-3 rounded-xl transition-all duration-200"
                       style={{
                         background: active ? 'rgba(200,56,42,0.08)' : 'var(--chip-bg)',
                         border: active ? '1px solid rgba(200,56,42,0.3)' : '1px solid var(--chip-border)',
@@ -228,9 +228,11 @@ export default function WorkWithMe() {
             {/* Budget */}
             <div className="px-5 pt-3.5 pb-3.5" style={{ borderBottom: '1px solid var(--divider)' }}>
               <p className="font-mono text-[9px] tracking-[0.2em] text-t5 uppercase mb-3">Budget range</p>
-              <div className="flex flex-wrap gap-2">
-                {BUDGETS.map((b) => {
+              <div className="grid grid-cols-2 gap-2">
+                {BUDGETS.map((b, i) => {
                   const active = form.budget === b.label
+                  // TBD is the 5th item — span full width so the grid stays even
+                  const isLast = i === BUDGETS.length - 1
                   return (
                     <motion.button
                       type="button"
@@ -238,7 +240,7 @@ export default function WorkWithMe() {
                       onClick={() => set('budget', active ? '' : b.label)}
                       whileTap={{ scale: 0.9 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 18 }}
-                      className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200"
+                      className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${isLast ? 'col-span-2' : ''}`}
                       style={{
                         background: active ? 'rgba(200,56,42,0.08)' : 'var(--chip-bg)',
                         border: active ? '1px solid rgba(200,56,42,0.3)' : '1px solid var(--chip-border)',
