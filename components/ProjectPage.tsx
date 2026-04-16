@@ -6,14 +6,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Project } from '@/lib/projects'
 import VideoEmbed from '@/components/VideoEmbed'
-
-const glass = {
-  background: 'rgba(255,255,255,0.35)',
-  backdropFilter: 'blur(40px) saturate(180%)',
-  WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-  border: '1px solid rgba(255,255,255,0.6)',
-  boxShadow: '0 8px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
-}
+import Reveal from '@/components/Reveal'
+import { glass } from '@/lib/glass'
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 16 },
@@ -35,7 +29,7 @@ export default function ProjectPage({ project, next, prev }: { project: Project;
       <motion.div {...fade(0)} className="mb-8">
         <button
           onClick={() => router.back()}
-          className="font-mono text-[10px] text-[#bbb] hover:text-[#c8382a] transition-colors tracking-[0.1em]"
+          className="font-mono text-[10px] text-t6 hover:text-[#c8382a] transition-colors tracking-[0.1em]"
         >
           ← back to work
         </button>
@@ -68,43 +62,43 @@ export default function ProjectPage({ project, next, prev }: { project: Project;
               <span className="font-mono text-[9px] tracking-[0.15em] uppercase" style={{ color: project.accentColor }}>
                 {project.category}
               </span>
-              <span className="font-mono text-[9px] text-[#ccc]">·</span>
-              <span className="font-mono text-[9px] text-[#bbb] tracking-[0.1em]">{project.year}</span>
+              <span className="font-mono text-[9px] text-t7">·</span>
+              <span className="font-mono text-[9px] text-t6 tracking-[0.1em]">{project.year}</span>
               {project.status === 'in-progress' && (
                 <>
-                  <span className="font-mono text-[9px] text-[#ccc]">·</span>
+                  <span className="font-mono text-[9px] text-t7">·</span>
                   <span className="font-mono text-[9px] tracking-[0.12em] uppercase" style={{ color: '#c8382a' }}>in production</span>
                 </>
               )}
             </div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold text-[#1a1a1a] leading-none mb-2">
+            <h1 className="font-display text-4xl md:text-6xl font-bold text-t1 leading-none mb-2">
               {project.brand}
             </h1>
-            <p className="font-display text-xl md:text-2xl font-medium text-[#888] leading-snug">{project.title}</p>
+            <p className="font-display text-xl md:text-2xl font-medium text-t4 leading-snug">{project.title}</p>
           </div>
-          <p className="font-mono text-[12px] text-[#666] leading-relaxed max-w-sm md:text-right">
+          <p className="font-mono text-[12px] text-t3 leading-relaxed max-w-sm md:text-right">
             {project.tagline}
           </p>
         </div>
       </motion.div>
 
       {/* Brief + Approach */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <motion.div {...fade(0.10)} className="rounded-3xl p-8" style={glass}>
+      <Reveal className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="rounded-3xl p-8" style={glass}>
           <SectionLabel>the brief</SectionLabel>
-          <p className="font-mono text-[12px] text-[#555] leading-relaxed">{project.brief}</p>
-        </motion.div>
-        <motion.div {...fade(0.12)} className="rounded-3xl p-8" style={glass}>
+          <p className="font-mono text-[12px] text-t2 leading-relaxed">{project.brief}</p>
+        </div>
+        <div className="rounded-3xl p-8" style={glass}>
           <SectionLabel>the approach</SectionLabel>
-          <p className="font-mono text-[12px] text-[#555] leading-relaxed">{project.approach}</p>
-        </motion.div>
-      </div>
+          <p className="font-mono text-[12px] text-t2 leading-relaxed">{project.approach}</p>
+        </div>
+      </Reveal>
 
       {/* Stills */}
-      <motion.div {...fade(0.14)} className="rounded-3xl p-8 mb-6" style={glass}>
+      <Reveal className="rounded-3xl p-8 mb-6" style={glass}>
         <div className="flex items-baseline justify-between mb-6">
           <SectionLabel>stills</SectionLabel>
-          <span className="font-mono text-[9px] text-[#bbb]">
+          <span className="font-mono text-[9px] text-t6">
             {project.images?.length ? `${project.images.length} frames` : 'coming soon'}
           </span>
         </div>
@@ -134,42 +128,42 @@ export default function ProjectPage({ project, next, prev }: { project: Project;
             ))}
           </div>
         )}
-      </motion.div>
+      </Reveal>
 
       {/* Tools */}
-      <motion.div {...fade(0.16)} className="rounded-3xl p-8 mb-6" style={glass}>
+      <Reveal delay={0.05} className="rounded-3xl p-8 mb-6" style={glass}>
         <SectionLabel>tools</SectionLabel>
         <div className="flex flex-wrap gap-2">
           {project.tools.map(tool => (
             <span
               key={tool}
               className="font-mono text-[9px] tracking-[0.1em] uppercase px-3 py-1.5 rounded-full"
-              style={{ background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(0,0,0,0.08)', color: '#666' }}
+              style={{ background: 'var(--chip-bg)', border: '1px solid var(--chip-border)', color: 'var(--t3)' }}
             >
               {tool}
             </span>
           ))}
         </div>
-      </motion.div>
+      </Reveal>
 
       {/* Prev / Next */}
       {(prev || next) && (
-        <motion.div {...fade(0.18)} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <Reveal delay={0.05} className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {prev ? (
             <Link href={`/work/${prev.slug}`} className="group rounded-2xl p-6 flex flex-col gap-2 transition-all hover:-translate-y-0.5" style={glass}>
-              <span className="font-mono text-[9px] text-[#bbb] tracking-[0.1em]">← previous</span>
-              <span className="font-display text-lg font-bold text-[#1a1a1a] group-hover:text-[#c8382a] transition-colors">{prev.brand}</span>
-              <span className="font-mono text-[10px] text-[#888]">{prev.title}</span>
+              <span className="font-mono text-[9px] text-t6 tracking-[0.1em]">← previous</span>
+              <span className="font-display text-lg font-bold text-t1 group-hover:text-[#c8382a] transition-colors">{prev.brand}</span>
+              <span className="font-mono text-[10px] text-t4">{prev.title}</span>
             </Link>
           ) : <div />}
           {next ? (
             <Link href={`/work/${next.slug}`} className="group rounded-2xl p-6 flex flex-col items-end gap-2 transition-all hover:-translate-y-0.5" style={glass}>
-              <span className="font-mono text-[9px] text-[#bbb] tracking-[0.1em]">next →</span>
-              <span className="font-display text-lg font-bold text-[#1a1a1a] group-hover:text-[#c8382a] transition-colors">{next.brand}</span>
-              <span className="font-mono text-[10px] text-[#888]">{next.title}</span>
+              <span className="font-mono text-[9px] text-t6 tracking-[0.1em]">next →</span>
+              <span className="font-display text-lg font-bold text-t1 group-hover:text-[#c8382a] transition-colors">{next.brand}</span>
+              <span className="font-mono text-[10px] text-t4">{next.title}</span>
             </Link>
           ) : <div />}
-        </motion.div>
+        </Reveal>
       )}
 
     </main>

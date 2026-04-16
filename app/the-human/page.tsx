@@ -3,14 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-
-const glass = {
-  background: 'rgba(255,255,255,0.35)',
-  backdropFilter: 'blur(40px) saturate(180%)',
-  WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-  border: '1px solid rgba(255,255,255,0.6)',
-  boxShadow: '0 8px 40px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.9)',
-}
+import Reveal from '@/components/Reveal'
+import { glass } from '@/lib/glass'
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 16 },
@@ -39,7 +33,7 @@ export default function About() {
 
       {/* Header — same container as portfolio */}
       <motion.div {...fade(0)} className="flex items-baseline gap-4 px-6 md:px-10 pt-10 pb-6">
-        <h1 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] leading-none">the human</h1>
+        <h1 className="font-display text-5xl md:text-6xl font-bold text-t1 leading-none">the human</h1>
         <span className="font-mono text-[13px] text-[#c8382a] tracking-[0.12em]">03</span>
       </motion.div>
 
@@ -54,23 +48,23 @@ export default function About() {
           >
             {/* Name + label */}
             <div>
-              <h2 className="font-ui text-4xl md:text-5xl font-bold text-[#1a1a1a] leading-tight">
+              <h2 className="font-ui text-4xl md:text-5xl font-bold text-t1 leading-tight">
                 Alex Boyanov
               </h2>
-              <p className="font-mono text-[11px] text-[#999] mt-1">Sofia, Bulgaria — works globally</p>
+              <p className="font-mono text-[11px] text-t5 mt-1">Sofia, Bulgaria — works globally</p>
             </div>
 
             {/* Divider */}
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.4)' }} />
+            <div style={{ height: 1, background: 'var(--divider)' }} />
 
             {/* Bio */}
-            <div className="space-y-4 font-mono text-[12.5px] text-[#555] leading-[1.9]">
+            <div className="space-y-4 font-mono text-[12.5px] text-t2 leading-[1.9]">
               <p>
                 I make hyper-realistic campaign films for fashion, beverage, and lifestyle brands — without a studio, crew, or six-figure budget. The work looks like it was shot on location. It wasn&apos;t.
               </p>
               <p>
                 The difference between AI content that looks generated and AI content that looks like a{' '}
-                <span className="text-[#1a1a1a] font-medium">€30,000 production</span> is in how you direct it: the shot language, the light source, the subject behaviour, the film texture. I build those decisions the same way a director does on set.
+                <span className="text-t1 font-medium">€30,000 production</span> is in how you direct it: the shot language, the light source, the subject behaviour, the film texture. I build those decisions the same way a director does on set.
               </p>
               <p>
                 Before this I ran a streetwear brand in Sofia for five years — which taught me that how you present something matters as much as what it is.
@@ -78,11 +72,11 @@ export default function About() {
             </div>
 
             {/* Divider */}
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.4)' }} />
+            <div style={{ height: 1, background: 'var(--divider)' }} />
 
             {/* Timeline */}
             <div>
-              <p className="font-mono text-[10px] tracking-[0.2em] text-[#999] uppercase mb-6">Journey</p>
+              <p className="font-mono text-[10px] tracking-[0.2em] text-t5 uppercase mb-6">Journey</p>
               <div className="flex flex-col gap-5">
                 {[
                   {
@@ -110,12 +104,12 @@ export default function About() {
                         className="w-2 h-2 rounded-full shrink-0"
                         style={{ background: item.active ? '#22c55e' : '#d0d0d0' }}
                       />
-                      <span className="w-px flex-1 mt-1" style={{ background: 'rgba(0,0,0,0.08)' }} />
+                      <span className="w-px flex-1 mt-1" style={{ background: 'var(--divider)' }} />
                     </div>
                     <div className="pb-2">
-                      <p className="font-mono text-[10px] text-[#999] mb-1">{item.period}</p>
-                      <p className="font-ui text-sm font-semibold text-[#1a1a1a] mb-1">{item.title}</p>
-                      <p className="font-mono text-[11px] text-[#777] leading-relaxed">{item.desc}</p>
+                      <p className="font-mono text-[10px] text-t5 mb-1">{item.period}</p>
+                      <p className="font-ui text-sm font-semibold text-t1 mb-1">{item.title}</p>
+                      <p className="font-mono text-[11px] text-t4 leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -129,8 +123,8 @@ export default function About() {
               style={{ background: 'rgba(200,56,42,0.10)', border: '1px solid rgba(200,56,42,0.22)' }}
             >
               <div>
-                <p className="font-ui text-sm font-semibold text-[#1a1a1a]">Let's Build</p>
-                <p className="font-mono text-[11px] text-[#888]">Open for projects &amp; collaborations</p>
+                <p className="font-ui text-sm font-semibold text-t1">Let's Build</p>
+                <p className="font-mono text-[11px] text-t4">Open for projects &amp; collaborations</p>
               </div>
               <span className="font-mono text-sm text-[#c8382a] group-hover:translate-x-1 transition-transform">→</span>
             </Link>
@@ -140,8 +134,7 @@ export default function About() {
           <div className="md:col-span-2 flex flex-col gap-3">
 
             {/* Photo card */}
-            <motion.div
-              {...fade(0.1)}
+            <Reveal
               className="rounded-3xl overflow-hidden"
               style={{ ...glass, padding: 0 }}
             >
@@ -160,20 +153,20 @@ export default function About() {
                 />
               </div>
               <div className="px-6 py-5">
-                <p className="font-ui text-sm font-semibold text-[#1a1a1a]">Alex Boyanov</p>
+                <p className="font-ui text-sm font-semibold text-t1">Alex Boyanov</p>
                 <p className="font-mono text-[10px] text-[#c8382a] tracking-[0.12em] uppercase mt-0.5">
                   AI Creative Director
                 </p>
               </div>
-            </motion.div>
+            </Reveal>
 
             {/* Skills card */}
-            <motion.div
-              {...fade(0.18)}
+            <Reveal
+              delay={0.08}
               className="rounded-3xl px-6 py-6"
               style={glass}
             >
-              <p className="font-mono text-[10px] tracking-[0.2em] text-[#999] uppercase mb-5">Skills &amp; Tools</p>
+              <p className="font-mono text-[10px] tracking-[0.2em] text-t5 uppercase mb-5">Skills &amp; Tools</p>
               <div className="flex flex-col gap-2.5">
                 {skills.map((skill) => (
                   <div key={skill} className="flex items-center gap-3">
@@ -181,25 +174,25 @@ export default function About() {
                       className="w-1 h-1 rounded-full shrink-0"
                       style={{ background: '#c8382a' }}
                     />
-                    <span className="font-mono text-[11px] text-[#555]">{skill}</span>
+                    <span className="font-mono text-[11px] text-t2">{skill}</span>
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </Reveal>
 
             {/* Available badge */}
-            <motion.div {...fade(0.24)} className="rounded-3xl px-6 py-5" style={glass}>
+            <Reveal delay={0.12} className="rounded-3xl px-6 py-5" style={glass}>
               <div className="flex items-center gap-3">
                 <span className="relative flex h-2.5 w-2.5 shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
                 </span>
                 <div>
-                  <p className="font-mono text-[11px] text-[#1a1a1a] font-medium">Available for work</p>
-                  <p className="font-mono text-[10px] text-[#999] mt-0.5">Open to new projects</p>
+                  <p className="font-mono text-[11px] text-t1 font-medium">Available for work</p>
+                  <p className="font-mono text-[10px] text-t5 mt-0.5">Open to new projects</p>
                 </div>
               </div>
-            </motion.div>
+            </Reveal>
 
           </div>
         </div>

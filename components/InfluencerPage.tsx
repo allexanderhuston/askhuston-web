@@ -5,14 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Influencer } from '@/lib/influencers'
-
-const glass = {
-  background: 'rgba(255,255,255,0.35)',
-  backdropFilter: 'blur(40px) saturate(180%)',
-  WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-  border: '1px solid rgba(255,255,255,0.6)',
-  boxShadow: '0 8px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
-}
+import { glass } from '@/lib/glass'
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 16 },
@@ -24,7 +17,7 @@ function Tag({ children, color }: { children: React.ReactNode; color?: string })
   return (
     <span
       className="font-mono text-[9px] tracking-[0.14em] uppercase px-2.5 py-1 rounded-full"
-      style={{ background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(0,0,0,0.08)', color: color ?? '#666' }}
+      style={{ background: 'var(--chip-bg)', border: '1px solid var(--chip-border)', color: color ?? 'var(--t3)' }}
     >
       {children}
     </span>
@@ -48,7 +41,7 @@ export default function InfluencerPage({ influencer }: { influencer: Influencer 
       <motion.div {...fade(0)} className="mb-8">
         <button
           onClick={() => router.back()}
-          className="font-mono text-[10px] text-[#bbb] hover:text-[#c8382a] transition-colors tracking-[0.1em]"
+          className="font-mono text-[10px] text-t6 hover:text-[#c8382a] transition-colors tracking-[0.1em]"
         >
           ← back to work
         </button>
@@ -69,21 +62,21 @@ export default function InfluencerPage({ influencer }: { influencer: Influencer 
             >
               {influencer.status === 'live' ? 'live' : 'in production'}
             </span>
-            <span className="font-mono text-[9px] text-[#bbb] tracking-[0.1em]">{influencer.niche}</span>
+            <span className="font-mono text-[9px] text-t6 tracking-[0.1em]">{influencer.niche}</span>
           </div>
 
           <div>
-            <h1 className="font-display text-6xl md:text-7xl font-bold text-[#1a1a1a] leading-none mb-2">
+            <h1 className="font-display text-6xl md:text-7xl font-bold text-t1 leading-none mb-2">
               {influencer.name}
             </h1>
-            <p className="font-mono text-[12px] text-[#888] mb-1">{influencer.handle}</p>
+            <p className="font-mono text-[12px] text-t4 mb-1">{influencer.handle}</p>
             {influencer.age && influencer.basedIn && (
-              <p className="font-mono text-[11px] text-[#bbb]">{influencer.age} · {influencer.basedIn}</p>
+              <p className="font-mono text-[11px] text-t6">{influencer.age} · {influencer.basedIn}</p>
             )}
           </div>
 
           {influencer.bio && (
-            <p className="font-mono text-[12px] text-[#555] leading-relaxed max-w-sm">
+            <p className="font-mono text-[12px] text-t2 leading-relaxed max-w-sm">
               &ldquo;{influencer.bio}&rdquo;
             </p>
           )}
@@ -119,13 +112,13 @@ export default function InfluencerPage({ influencer }: { influencer: Influencer 
         <motion.div {...fade(0.1)} className="rounded-3xl p-8" style={glass}>
           <SectionLabel>the character</SectionLabel>
           {influencer.characterBrief && (
-            <p className="font-mono text-[12px] text-[#555] leading-relaxed mb-6">
+            <p className="font-mono text-[12px] text-t2 leading-relaxed mb-6">
               {influencer.characterBrief}
             </p>
           )}
           {influencer.platforms && (
             <div>
-              <p className="font-mono text-[9px] text-[#bbb] tracking-[0.12em] uppercase mb-2">platforms</p>
+              <p className="font-mono text-[9px] text-t6 tracking-[0.12em] uppercase mb-2">platforms</p>
               <div className="flex flex-wrap gap-2">
                 {influencer.platforms.map(p => <Tag key={p}>{p}</Tag>)}
               </div>
@@ -137,13 +130,13 @@ export default function InfluencerPage({ influencer }: { influencer: Influencer 
         <motion.div {...fade(0.12)} className="rounded-3xl p-8" style={glass}>
           <SectionLabel>the build</SectionLabel>
           {influencer.consistencyMethod && (
-            <p className="font-mono text-[12px] text-[#555] leading-relaxed mb-6">
+            <p className="font-mono text-[12px] text-t2 leading-relaxed mb-6">
               {influencer.consistencyMethod}
             </p>
           )}
           {influencer.tools && (
             <div>
-              <p className="font-mono text-[9px] text-[#bbb] tracking-[0.12em] uppercase mb-2">tools</p>
+              <p className="font-mono text-[9px] text-t6 tracking-[0.12em] uppercase mb-2">tools</p>
               <div className="flex flex-wrap gap-2">
                 {influencer.tools.map(t => <Tag key={t}>{t}</Tag>)}
               </div>
@@ -156,7 +149,7 @@ export default function InfluencerPage({ influencer }: { influencer: Influencer 
       <motion.div {...fade(0.14)} className="rounded-3xl p-8 mb-6" style={glass}>
         <div className="flex items-baseline justify-between mb-6">
           <SectionLabel>content</SectionLabel>
-          <span className="font-mono text-[9px] text-[#bbb] tracking-[0.1em]">
+          <span className="font-mono text-[9px] text-t6 tracking-[0.1em]">
             {hasImages ? `${influencer.images!.length} posts` : 'coming soon'}
           </span>
         </div>
@@ -193,19 +186,19 @@ export default function InfluencerPage({ influencer }: { influencer: Influencer 
 
           {influencer.targetAudience && (
             <div className="mb-6">
-              <p className="font-mono text-[9px] text-[#bbb] tracking-[0.12em] uppercase mb-2">target audience</p>
-              <p className="font-mono text-[12px] text-[#555] leading-relaxed">{influencer.targetAudience}</p>
+              <p className="font-mono text-[9px] text-t6 tracking-[0.12em] uppercase mb-2">target audience</p>
+              <p className="font-mono text-[12px] text-t2 leading-relaxed">{influencer.targetAudience}</p>
             </div>
           )}
 
           {influencer.contentPillars && (
             <div>
-              <p className="font-mono text-[9px] text-[#bbb] tracking-[0.12em] uppercase mb-2">content pillars</p>
+              <p className="font-mono text-[9px] text-t6 tracking-[0.12em] uppercase mb-2">content pillars</p>
               <div className="flex flex-col gap-2">
                 {influencer.contentPillars.map((p, i) => (
                   <div key={p} className="flex items-center gap-3">
                     <span className="font-mono text-[9px] text-[#c8382a]">{String(i + 1).padStart(2, '0')}</span>
-                    <span className="font-mono text-[11px] text-[#555]">{p}</span>
+                    <span className="font-mono text-[11px] text-t2">{p}</span>
                   </div>
                 ))}
               </div>
@@ -225,7 +218,7 @@ export default function InfluencerPage({ influencer }: { influencer: Influencer 
           </div>
 
           <div className="flex flex-col gap-3">
-            <p className="font-mono text-[10px] text-[#bbb] tracking-[0.12em] uppercase">want {influencer.name} for your brand?</p>
+            <p className="font-mono text-[10px] text-t6 tracking-[0.12em] uppercase">want {influencer.name} for your brand?</p>
             <Link
               href="/work-with-me"
               className="flex items-center justify-between px-5 py-3 rounded-full transition-all group"

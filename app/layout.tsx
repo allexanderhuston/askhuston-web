@@ -5,6 +5,8 @@ import SiteShell from '@/components/SiteShell'
 import AnimatedBackground from '@/components/AnimatedBackground'
 import CustomCursor from '@/components/CustomCursor'
 import { CursorProvider } from '@/lib/cursor-context'
+import { ThemeProvider } from '@/lib/theme-context'
+import { LoadingProvider } from '@/lib/loading-context'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -89,11 +91,17 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${courierPrime.variable}`}
     >
       <body className="text-text font-body min-h-screen flex flex-col">
-        <CursorProvider>
-          <AnimatedBackground />
-          <CustomCursor />
-          <SiteShell>{children}</SiteShell>
-        </CursorProvider>
+        {/* Anti-FOUC: apply saved theme before paint */}
+        <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}` }} />
+        <ThemeProvider>
+          <LoadingProvider>
+          <CursorProvider>
+            <AnimatedBackground />
+            <CustomCursor />
+            <SiteShell>{children}</SiteShell>
+          </CursorProvider>
+          </LoadingProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

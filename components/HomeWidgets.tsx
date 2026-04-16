@@ -1,18 +1,13 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion } from 'framer-motion'
+import { useRef, useState, useEffect } from 'react'
+import { glass } from '@/lib/glass'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import HomeEmailRow from '@/components/HomeEmailRow'
 import FloatingHead from '@/components/FloatingHead'
-
-const glass = {
-  background: 'rgba(255,255,255,0.35)',
-  backdropFilter: 'blur(40px) saturate(180%)',
-  WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-  border: '1px solid rgba(255,255,255,0.6)',
-  boxShadow: '0 8px 40px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.9)',
-}
+import { useTheme } from '@/lib/theme-context'
+import { useLoading } from '@/lib/loading-context'
 
 const drag = {
   drag: true as const,
@@ -84,8 +79,65 @@ function TikTokIcon() {
   )
 }
 
+function SunIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </svg>
+  )
+}
+
+function MoonIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  )
+}
+
+function HomeThemeToggle() {
+  const { theme, toggle } = useTheme()
+  const isDark = theme === 'dark'
+
+  return (
+    <motion.button
+      onClick={toggle}
+      whileTap={{ scale: 0.85 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+      className="flex items-center justify-center rounded-full overflow-hidden"
+      style={{
+        width: 28,
+        height: 28,
+        background: 'var(--glass-hover)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: '1px solid var(--glass-border)',
+        color: 'var(--t4)',
+      }}
+      aria-label="Toggle theme"
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={isDark ? 'moon' : 'sun'}
+          initial={{ opacity: 0, rotate: -30, scale: 0.7 }}
+          animate={{ opacity: 1, rotate: 0, scale: 1 }}
+          exit={{ opacity: 0, rotate: 30, scale: 0.7 }}
+          transition={{ duration: 0.2, ease: [0.19, 1, 0.22, 1] }}
+          className="flex items-center justify-center"
+        >
+          {isDark ? <MoonIcon /> : <SunIcon />}
+        </motion.span>
+      </AnimatePresence>
+    </motion.button>
+  )
+}
+
 export default function HomeWidgets() {
   const containerRef = useRef<HTMLElement>(null)
+  const [mounted, setMounted] = useState(false)
+  const { loaded } = useLoading()
+  useEffect(() => { setMounted(true) }, [])
 
   return (
     <main
@@ -106,14 +158,20 @@ export default function HomeWidgets() {
             dragConstraints={containerRef}
             className="cursor-grab active:cursor-grabbing rounded-2xl"
             style={glass}
+            initial={{ opacity: 0, y: 24 }}
+            animate={loaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+            transition={{ delay: 0.3, duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
           >
             <HomeEmailRow />
           </motion.div>
 
           {/* Main card */}
-          <div
+          <motion.div
             className="rounded-3xl"
             style={{ ...glass, overflow: 'hidden' }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={loaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+            transition={{ delay: 0.45, duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
           >
             {/* Portfolio */}
             <div className="px-2 pt-1.5 pb-0.5">
@@ -124,10 +182,10 @@ export default function HomeWidgets() {
                 />
                 <div className="w-5 flex items-center justify-center shrink-0 relative z-10"><SparklesIcon /></div>
                 <div className="flex-1 min-w-0 flex flex-col gap-0.5 relative z-10">
-                  <span className="font-ui text-sm font-semibold text-[#1a1a1a]">Work</span>
-                  <span className="font-mono text-[11px] text-[#888]">See what&apos;s possible</span>
+                  <span className="font-ui text-sm font-semibold text-t1">Work</span>
+                  <span className="font-mono text-[11px] text-t4">See what&apos;s possible</span>
                 </div>
-                <span className="font-mono text-[11px] text-[#bbb] group-hover:text-[#888] transition-colors shrink-0 relative z-10">01</span>
+                <span className="font-mono text-[11px] text-t6 group-hover:text-t4 transition-colors shrink-0 relative z-10">01</span>
               </Link>
             </div>
 
@@ -140,10 +198,10 @@ export default function HomeWidgets() {
                 />
                 <div className="w-5 flex items-center justify-center shrink-0 relative z-10"><SendIcon /></div>
                 <div className="flex-1 min-w-0 flex flex-col gap-0.5 relative z-10">
-                  <span className="font-ui text-sm font-semibold text-[#1a1a1a]">Let's Build</span>
-                  <span className="font-mono text-[11px] text-[#888]">Let&apos;s make something</span>
+                  <span className="font-ui text-sm font-semibold text-t1">Let's Build</span>
+                  <span className="font-mono text-[11px] text-t4">Let&apos;s make something</span>
                 </div>
-                <span className="font-mono text-[11px] text-[#bbb] group-hover:text-[#888] transition-colors shrink-0 relative z-10">02</span>
+                <span className="font-mono text-[11px] text-t6 group-hover:text-t4 transition-colors shrink-0 relative z-10">02</span>
               </Link>
             </div>
 
@@ -156,16 +214,16 @@ export default function HomeWidgets() {
                 />
                 <div className="w-5 flex items-center justify-center shrink-0 relative z-10"><PersonIcon /></div>
                 <div className="flex-1 min-w-0 flex flex-col gap-0.5 relative z-10">
-                  <span className="font-ui text-sm font-semibold text-[#1a1a1a]">The Human</span>
-                  <span className="font-mono text-[11px] text-[#888]">AI Creative Director</span>
+                  <span className="font-ui text-sm font-semibold text-t1">The Human</span>
+                  <span className="font-mono text-[11px] text-t4">AI Creative Director</span>
                 </div>
-                <span className="font-mono text-[11px] text-[#bbb] group-hover:text-[#888] transition-colors shrink-0 relative z-10">03</span>
+                <span className="font-mono text-[11px] text-t6 group-hover:text-t4 transition-colors shrink-0 relative z-10">03</span>
               </Link>
             </div>
 
-            {/* Social */}
+            {/* Social + toggle */}
             <div className="px-6 py-6">
-              <p className="font-mono text-[10px] tracking-[0.15em] text-[#999] mb-4">follow for more</p>
+              <p className="font-mono text-[10px] tracking-[0.15em] text-t5 mb-4">follow for more</p>
               <div className="grid grid-cols-2 gap-x-4 gap-y-4">
                 {[
                   { icon: <InstaIcon />, label: 'Instagram', href: 'https://instagram.com/askhuston' },
@@ -174,15 +232,18 @@ export default function HomeWidgets() {
                   { icon: <XIcon />, label: 'X', href: 'https://x.com/askhuston' },
                 ].map(({ icon, label, href }) => (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2.5 text-[#666] hover:text-[#1a1a1a] transition-colors">
+                    className="flex items-center gap-2.5 text-t3 hover:text-t1 transition-colors">
                     {icon}
                     <span className="font-mono text-[10px]">{label}</span>
                   </a>
                 ))}
               </div>
+              <div className="flex justify-end mt-4">
+                <HomeThemeToggle />
+              </div>
             </div>
 
-          </div>
+          </motion.div>
 
         </div>
       </div>

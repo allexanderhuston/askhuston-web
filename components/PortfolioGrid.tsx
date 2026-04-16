@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 import type { Project, ProjectCategory } from '@/lib/projects'
 import type { Photo } from '@/lib/photos'
 import type { Influencer } from '@/lib/influencers'
 import { useCursor } from '@/lib/cursor-context'
 import InfluencerBoard from '@/components/InfluencerBoard'
+import { glass } from '@/lib/glass'
 
 const VIDEO_FILTERS: { label: string; value: ProjectCategory | 'all' }[] = [
   { label: 'all', value: 'all' },
@@ -21,20 +22,42 @@ const VIDEO_FILTERS: { label: string; value: ProjectCategory | 'all' }[] = [
 function ProjectRow({ project, index }: { project: Project; index: number }) {
   const { setState } = useCursor()
   const isEven = index % 2 === 0
+  const cardRef = useRef<HTMLDivElement>(null)
+  const rotateX = useMotionValue(0)
+  const rotateY = useMotionValue(0)
+  const springX = useSpring(rotateX, { stiffness: 150, damping: 22 })
+  const springY = useSpring(rotateY, { stiffness: 150, damping: 22 })
+
+  function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    rotateY.set(x * 6)
+    rotateX.set(-y * 6)
+  }
+
+  function onMouseLeave() {
+    rotateX.set(0)
+    rotateY.set(0)
+  }
 
   return (
     <motion.div
+      ref={cardRef}
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 12 }}
       transition={{ delay: index * 0.06, duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
+      whileTap={{ scale: 0.98 }}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
       className="rounded-2xl overflow-hidden"
       style={{
-        background: 'rgba(255,255,255,0.35)',
-        backdropFilter: 'blur(40px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-        border: '1px solid rgba(255,255,255,0.6)',
-        boxShadow: '0 8px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
+        rotateX: springX,
+        rotateY: springY,
+        perspective: 1000,
+        ...glass,
       }}
     >
       <Link
@@ -70,20 +93,20 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
             <span className="font-mono text-[10px] tracking-[0.18em] uppercase" style={{ color: project.accentColor }}>
               {project.category}
             </span>
-            <span className="font-mono text-[11px] text-[#ccc]">
+            <span className="font-mono text-[11px] text-t7">
               {String(index + 1).padStart(2, '0')}
             </span>
           </div>
           <div className="flex flex-col gap-3">
-            <p className="font-mono text-[11px] text-[#999]">{project.year}</p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-[#1a1a1a] leading-tight group-hover:text-[#c8382a] transition-colors duration-300">
+            <p className="font-mono text-[11px] text-t5">{project.year}</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-t1 leading-tight group-hover:text-[#c8382a] transition-colors duration-300">
               {project.brand}
             </h2>
-            <p className="font-mono text-[12px] text-[#666] leading-relaxed max-w-xs">
+            <p className="font-mono text-[12px] text-t3 leading-relaxed max-w-xs">
               {project.tagline}
             </p>
           </div>
-          <div className="flex items-center gap-2 text-[#bbb] group-hover:text-[#c8382a] transition-colors duration-300">
+          <div className="flex items-center gap-2 text-t6 group-hover:text-[#c8382a] transition-colors duration-300">
             <span className="font-mono text-[10px] tracking-[0.12em] uppercase">view project</span>
             <span className="text-xs">→</span>
           </div>
@@ -99,7 +122,7 @@ function PhotoGrid({ photos }: { photos: Photo[] }) {
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="font-mono text-[12px] text-[#bbb] py-24 text-center"
+        className="font-mono text-[12px] text-t6 py-24 text-center"
       >
         photos coming soon
       </motion.p>
@@ -121,11 +144,7 @@ function PhotoGrid({ photos }: { photos: Photo[] }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.04, duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
           className="relative mb-3 rounded-xl overflow-hidden break-inside-avoid"
-          style={{
-            background: 'rgba(255,255,255,0.35)',
-            border: '1px solid rgba(255,255,255,0.6)',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
-          }}
+          style={glass}
         >
           <Image
             src={photo.src}
@@ -166,15 +185,15 @@ export default function PortfolioGrid({ projects, photos, influencers }: { proje
     <div>
       {/* Header */}
       <div className="flex items-baseline gap-4 px-6 md:px-10 pt-10 pb-6">
-        <h1 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] leading-none">work</h1>
+        <h1 className="font-display text-5xl md:text-6xl font-bold text-t1 leading-none">work</h1>
         <span className="font-mono text-[13px] text-[#c8382a] tracking-[0.12em]">01</span>
         {tab === 'motion' && (
-          <span className="font-mono text-[10px] text-[#bbb] tracking-[0.15em] uppercase ml-auto">
+          <span className="font-mono text-[10px] text-t6 tracking-[0.15em] uppercase ml-auto">
             {filtered.length} {filtered.length === 1 ? 'project' : 'projects'}
           </span>
         )}
         {tab === 'stills' && (
-          <span className="font-mono text-[10px] text-[#bbb] tracking-[0.15em] uppercase ml-auto">
+          <span className="font-mono text-[10px] text-t6 tracking-[0.15em] uppercase ml-auto">
             {photos.length} {photos.length === 1 ? 'photo' : 'photos'}
           </span>
         )}
@@ -191,9 +210,11 @@ export default function PortfolioGrid({ projects, photos, influencers }: { proje
           }}
         >
           {(['motion', 'stills'] as Tab[]).map((t) => (
-            <button
+            <motion.button
               key={t}
               onClick={() => setTab(t)}
+              whileTap={{ scale: 0.93 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
               className="relative px-5 py-1.5 rounded-full font-display text-[12px] font-medium transition-colors duration-200"
               style={{ color: tab === t ? '#1a1a1a' : '#999' }}
             >
@@ -210,7 +231,7 @@ export default function PortfolioGrid({ projects, photos, influencers }: { proje
                 />
               )}
               <span className="relative z-10">{t}</span>
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>
@@ -227,9 +248,11 @@ export default function PortfolioGrid({ projects, photos, influencers }: { proje
             {/* Video filters */}
             <div className="px-6 md:px-10 pb-6 flex flex-wrap gap-2">
               {VIDEO_FILTERS.map(({ label, value }) => (
-                <button
+                <motion.button
                   key={value}
                   onClick={() => setActiveFilter(value)}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                   className="relative px-4 py-1.5 rounded-full font-mono text-[10px] tracking-[0.1em] transition-colors duration-200"
                   style={{ color: activeFilter === value ? '#1a1a1a' : '#999' }}
                 >
@@ -246,7 +269,7 @@ export default function PortfolioGrid({ projects, photos, influencers }: { proje
                     />
                   )}
                   <span className="relative z-10">{label}</span>
-                </button>
+                </motion.button>
               ))}
             </div>
 
@@ -267,7 +290,7 @@ export default function PortfolioGrid({ projects, photos, influencers }: { proje
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="font-mono text-[12px] text-[#bbb] py-16 text-center"
+                      className="font-mono text-[12px] text-t6 py-16 text-center"
                     >
                       nothing here yet — check back soon
                     </motion.p>

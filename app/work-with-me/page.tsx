@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { glass } from '@/lib/glass'
 
 const PROJECT_TYPES = [
   { label: 'Campaign Film', sub: 'brand story, hero video' },
@@ -19,14 +20,6 @@ const BUDGETS = [
   { label: '€7k+', sub: "let's go" },
   { label: 'TBD', sub: "let's talk" },
 ]
-
-const glass = {
-  background: 'rgba(255,255,255,0.35)',
-  backdropFilter: 'blur(40px) saturate(180%)',
-  WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-  border: '1px solid rgba(255,255,255,0.6)',
-  boxShadow: '0 8px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
-}
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -101,7 +94,7 @@ export default function WorkWithMe() {
 
       {/* Header — same container as portfolio */}
       <motion.div {...fade(0)} className="flex items-baseline gap-4 px-6 md:px-10 pt-10 pb-6">
-        <h1 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] leading-none">let's build</h1>
+        <h1 className="font-display text-5xl md:text-6xl font-bold text-t1 leading-none">let's build</h1>
         <span className="font-mono text-[13px] text-[#c8382a] tracking-[0.12em]">02</span>
       </motion.div>
 
@@ -109,12 +102,12 @@ export default function WorkWithMe() {
 
       {/* Hero */}
       <motion.div {...fade(0.06)} className="mb-6">
-        <h1 className="font-display text-[clamp(2.4rem,5.5vw,4.2rem)] font-black text-[#1a1a1a] leading-[0.96] mb-3">
+        <h1 className="font-display text-[clamp(2.4rem,5.5vw,4.2rem)] font-black text-t1 leading-[0.96] mb-3">
           let's make<br />
           <span style={{ color: '#c8382a' }}>something</span><br />
           worth watching.
         </h1>
-        <p className="font-mono text-[12px] text-[#666] leading-relaxed max-w-md">
+        <p className="font-mono text-[12px] text-t3 leading-relaxed max-w-md">
           AI-native campaigns for brands that want to move culture, not just content calendars.
           Tell me what you're building — I'll tell you how we make it hit.
         </p>
@@ -125,8 +118,8 @@ export default function WorkWithMe() {
         {WHAT_YOU_GET.map((item) => (
           <div key={item.num} className="rounded-2xl p-4" style={glass}>
             <p className="font-mono text-[9px] tracking-[0.18em] text-[#c8382a] uppercase mb-2">{item.num}</p>
-            <p className="font-display text-[13px] font-bold text-[#1a1a1a] mb-1 leading-snug">{item.title}</p>
-            <p className="font-mono text-[10px] text-[#666] leading-relaxed">{item.body}</p>
+            <p className="font-display text-[13px] font-bold text-t1 mb-1 leading-snug">{item.title}</p>
+            <p className="font-mono text-[10px] text-t3 leading-relaxed">{item.body}</p>
           </div>
         ))}
       </motion.div>
@@ -143,10 +136,10 @@ export default function WorkWithMe() {
             style={glass}
           >
             <p className="font-mono text-[10px] tracking-[0.22em] text-[#c8382a] uppercase mb-4">brief received</p>
-            <p className="font-display text-4xl font-black text-[#1a1a1a] mb-3 leading-tight">
+            <p className="font-display text-4xl font-black text-t1 mb-3 leading-tight">
               I'll be in touch<br />with ideas.
             </p>
-            <p className="font-mono text-[11px] text-[#888] leading-relaxed">
+            <p className="font-mono text-[11px] text-t4 leading-relaxed">
               Usually within 24 hours. Not 48. Not a week.<br />
               If you don't hear from me, check your spam.
             </p>
@@ -163,8 +156,8 @@ export default function WorkWithMe() {
           >
 
             {/* Name + Email */}
-            <div className="grid grid-cols-1 md:grid-cols-2" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-              <Field label="Name *" style={{ borderRight: '1px solid rgba(0,0,0,0.06)' }}>
+            <div className="grid grid-cols-1 md:grid-cols-2" style={{ borderBottom: '1px solid var(--divider)' }}>
+              <Field label="Name *" style={{ borderRight: '1px solid var(--divider)' }}>
                 <input
                   required
                   name="name"
@@ -172,7 +165,7 @@ export default function WorkWithMe() {
                   value={form.name}
                   onChange={e => set('name', e.target.value)}
                   placeholder="Your name"
-                  className="font-mono text-[12px] text-[#1a1a1a] bg-transparent w-full focus:outline-none placeholder:text-[#bbb]"
+                  className="font-mono text-[12px] text-t1 bg-transparent w-full focus:outline-none placeholder:text-t6"
                 />
               </Field>
               <Field label="Email *">
@@ -183,84 +176,88 @@ export default function WorkWithMe() {
                   value={form.email}
                   onChange={e => set('email', e.target.value)}
                   placeholder="you@brand.com"
-                  className="font-mono text-[12px] text-[#1a1a1a] bg-transparent w-full focus:outline-none placeholder:text-[#bbb]"
+                  className="font-mono text-[12px] text-t1 bg-transparent w-full focus:outline-none placeholder:text-t6"
                 />
               </Field>
             </div>
 
             {/* Brand */}
-            <Field label="Brand / Company" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+            <Field label="Brand / Company" style={{ borderBottom: '1px solid var(--divider)' }}>
               <input
                 name="brand"
                 type="text"
                 value={form.brand}
                 onChange={e => set('brand', e.target.value)}
                 placeholder="What's the brand?"
-                className="font-mono text-[12px] text-[#1a1a1a] bg-transparent w-full focus:outline-none placeholder:text-[#bbb]"
+                className="font-mono text-[12px] text-t1 bg-transparent w-full focus:outline-none placeholder:text-t6"
               />
             </Field>
 
             {/* Project Type */}
-            <div className="px-5 pt-3.5 pb-3.5" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-              <p className="font-mono text-[9px] tracking-[0.2em] text-[#999] uppercase mb-3">What do you need?</p>
+            <div className="px-5 pt-3.5 pb-3.5" style={{ borderBottom: '1px solid var(--divider)' }}>
+              <p className="font-mono text-[9px] tracking-[0.2em] text-t5 uppercase mb-3">What do you need?</p>
               <div className="flex flex-wrap gap-2">
                 {PROJECT_TYPES.map((pt) => {
                   const active = form.projectTypes.includes(pt.label)
                   return (
-                    <button
+                    <motion.button
                       type="button"
                       key={pt.label}
                       onClick={() => toggleProjectType(pt.label)}
+                      whileTap={{ scale: 0.92 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 18 }}
                       className="flex flex-col items-start px-4 py-2.5 rounded-xl transition-all duration-200"
                       style={{
-                        background: active ? 'rgba(200,56,42,0.08)' : 'rgba(255,255,255,0.5)',
-                        border: active ? '1px solid rgba(200,56,42,0.3)' : '1px solid rgba(0,0,0,0.07)',
+                        background: active ? 'rgba(200,56,42,0.08)' : 'var(--chip-bg)',
+                        border: active ? '1px solid rgba(200,56,42,0.3)' : '1px solid var(--chip-border)',
                         boxShadow: active ? '0 0 0 1px rgba(200,56,42,0.15)' : 'none',
                       }}
                     >
-                      <span className="font-mono text-[11px] font-medium" style={{ color: active ? '#c8382a' : '#333' }}>
+                      <span className="font-mono text-[11px] font-medium" style={{ color: active ? '#c8382a' : 'var(--t2)' }}>
                         {pt.label}
                       </span>
-                      <span className="font-mono text-[9px]" style={{ color: active ? '#c8382a80' : '#bbb' }}>
+                      <span className="font-mono text-[9px]" style={{ color: active ? '#c8382a80' : 'var(--t6)' }}>
                         {pt.sub}
                       </span>
-                    </button>
+                    </motion.button>
                   )
                 })}
               </div>
             </div>
 
             {/* Budget */}
-            <div className="px-5 pt-3.5 pb-3.5" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-              <p className="font-mono text-[9px] tracking-[0.2em] text-[#999] uppercase mb-3">Budget range</p>
+            <div className="px-5 pt-3.5 pb-3.5" style={{ borderBottom: '1px solid var(--divider)' }}>
+              <p className="font-mono text-[9px] tracking-[0.2em] text-t5 uppercase mb-3">Budget range</p>
               <div className="flex flex-wrap gap-2">
                 {BUDGETS.map((b) => {
                   const active = form.budget === b.label
                   return (
-                    <button
+                    <motion.button
                       type="button"
                       key={b.label}
                       onClick={() => set('budget', active ? '' : b.label)}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 18 }}
                       className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200"
                       style={{
-                        background: active ? 'rgba(200,56,42,0.08)' : 'rgba(255,255,255,0.5)',
-                        border: active ? '1px solid rgba(200,56,42,0.3)' : '1px solid rgba(0,0,0,0.07)',
+                        background: active ? 'rgba(200,56,42,0.08)' : 'var(--chip-bg)',
+                        border: active ? '1px solid rgba(200,56,42,0.3)' : '1px solid var(--chip-border)',
                       }}
                     >
-                      <span className="font-mono text-[11px] font-medium" style={{ color: active ? '#c8382a' : '#333' }}>
+                      <span className="font-mono text-[11px] font-medium" style={{ color: active ? '#c8382a' : 'var(--t2)' }}>
                         {b.label}
                       </span>
-                      <span className="font-mono text-[9px]" style={{ color: active ? '#c8382a80' : '#bbb' }}>
+                      <span className="font-mono text-[9px]" style={{ color: active ? '#c8382a80' : 'var(--t6)' }}>
                         {b.sub}
                       </span>
-                    </button>
+                    </motion.button>
                   )
                 })}
               </div>
             </div>
 
             {/* Message */}
-            <Field label="Tell me about it *" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+            <Field label="Tell me about it *" style={{ borderBottom: '1px solid var(--divider)' }}>
               <textarea
                 required
                 name="message"
@@ -268,7 +265,7 @@ export default function WorkWithMe() {
                 onChange={e => set('message', e.target.value)}
                 placeholder="The brand, the vibe, what you want people to feel. No brief needed — just talk."
                 rows={4}
-                className="font-mono text-[12px] text-[#1a1a1a] bg-transparent w-full focus:outline-none placeholder:text-[#bbb] resize-none"
+                className="font-mono text-[12px] text-t1 bg-transparent w-full focus:outline-none placeholder:text-t6 resize-none"
               />
             </Field>
 
@@ -283,19 +280,50 @@ export default function WorkWithMe() {
 
             {/* Submit */}
             <div className="px-5 py-4">
-              <button
+              <motion.button
                 type="submit"
                 disabled={status === 'loading'}
-                className="w-full py-3 rounded-2xl font-display text-[14px] font-bold tracking-[0.02em] transition-all duration-200 disabled:opacity-50"
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                className="w-full py-3 rounded-2xl font-display text-[14px] font-bold tracking-[0.02em] disabled:opacity-50 overflow-hidden relative"
                 style={{
                   background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
                   color: '#fff',
                   boxShadow: '0 4px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.08)',
                 }}
               >
-                {status === 'loading' ? 'sending...' : 'send the brief →'}
-              </button>
-              <p className="font-mono text-[9px] text-[#bbb] text-center mt-3 tracking-[0.1em]">
+                <AnimatePresence mode="wait" initial={false}>
+                  {status === 'loading' ? (
+                    <motion.span
+                      key="loading"
+                      className="flex items-center justify-center gap-2"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <motion.span
+                        className="w-3 h-3 rounded-full border border-white/30 border-t-white"
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 0.7, ease: 'linear' }}
+                        style={{ display: 'inline-block' }}
+                      />
+                      sending...
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="idle"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      send the brief →
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+              <p className="font-mono text-[9px] text-t6 text-center mt-3 tracking-[0.1em]">
                 no commitment. just a conversation.
               </p>
             </div>
@@ -325,8 +353,8 @@ export default function WorkWithMe() {
         {/* Text */}
         <div className="flex flex-col justify-center px-6 py-4 flex-1">
           <p className="font-mono text-[9px] tracking-[0.2em] text-[#999] uppercase mb-1">or skip the form</p>
-          <p className="font-display text-[15px] font-bold text-[#1a1a1a] leading-tight">steal my brain</p>
-          <p className="font-mono text-[10px] text-[#aaa] mt-0.5">quick creative audit · free · no pitch</p>
+          <p className="font-display text-[15px] font-bold text-t1 leading-tight">steal my brain</p>
+          <p className="font-mono text-[10px] text-t6 mt-0.5">quick creative audit · free · no pitch</p>
         </div>
 
         {/* Arrow */}
@@ -351,7 +379,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5 px-5 py-3.5" style={style}>
-      <p className="font-mono text-[9px] tracking-[0.2em] text-[#999] uppercase">{label}</p>
+      <p className="font-mono text-[9px] tracking-[0.2em] text-t5 uppercase">{label}</p>
       {children}
     </div>
   )
