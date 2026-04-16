@@ -137,6 +137,8 @@ export default function HomeWidgets() {
   const containerRef = useRef<HTMLElement>(null)
   const [mounted, setMounted] = useState(false)
   const { loaded } = useLoading()
+  // True if we're navigating back (loading screen already ran)
+  const isReturn = useRef(loaded)
   useEffect(() => { setMounted(true) }, [])
 
   return (
@@ -152,26 +154,34 @@ export default function HomeWidgets() {
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="flex flex-col gap-2 w-[400px] px-4">
 
-          {/* Email block */}
+          {/* Email block — drops from top on return */}
           <motion.div
             {...drag}
             dragConstraints={containerRef}
             className="cursor-grab active:cursor-grabbing rounded-2xl"
             style={glass}
-            initial={{ opacity: 0, y: 24 }}
-            animate={loaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-            transition={{ delay: 0.3, duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
+            initial={isReturn.current
+              ? { opacity: 0, y: -80, rotate: -2 }
+              : { opacity: 0, y: 24 }}
+            animate={loaded
+              ? { opacity: 1, y: 0, rotate: 0 }
+              : { opacity: 0, y: isReturn.current ? -80 : 24 }}
+            transition={{ delay: isReturn.current ? 0.15 : 0.3, duration: 0.65, ease: [0.19, 1, 0.22, 1] }}
           >
             <HomeEmailRow />
           </motion.div>
 
-          {/* Main card */}
+          {/* Main card — rises from bottom on return */}
           <motion.div
             className="rounded-3xl"
             style={{ ...glass, overflow: 'hidden' }}
-            initial={{ opacity: 0, y: 24 }}
-            animate={loaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-            transition={{ delay: 0.45, duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
+            initial={isReturn.current
+              ? { opacity: 0, y: 100, rotate: 1.5 }
+              : { opacity: 0, y: 24 }}
+            animate={loaded
+              ? { opacity: 1, y: 0, rotate: 0 }
+              : { opacity: 0, y: isReturn.current ? 100 : 24 }}
+            transition={{ delay: isReturn.current ? 0.25 : 0.45, duration: 0.7, ease: [0.19, 1, 0.22, 1] }}
           >
             {/* Portfolio */}
             <div className="px-2 pt-1.5 pb-0.5">

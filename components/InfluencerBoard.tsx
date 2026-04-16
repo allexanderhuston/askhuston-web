@@ -4,7 +4,6 @@ import { useRef, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import type { Influencer } from '@/lib/influencers'
-import BgRemovedImage from '@/components/BgRemovedImage'
 
 const CARD_W = 120
 const CARD_H = 158
@@ -15,19 +14,47 @@ const POSITIONS = [
   { fx: 0.20, fy: 0.65 },
 ]
 
-const CURVE_AMOUNTS = [0.28, -0.24, 0.32]
-
 function computePath(cx: number, cy: number, ex: number, ey: number, index: number): string {
   const dx = ex - cx
   const dy = ey - cy
   const len = Math.sqrt(dx * dx + dy * dy) || 1
-  const perpX = -dy / len
-  const perpY = dx / len
-  const amount = CURVE_AMOUNTS[index % CURVE_AMOUNTS.length] * len
-  const qx = (cx + ex) / 2 + perpX * amount
-  const qy = (cy + ey) / 2 + perpY * amount
-  return `M ${cx} ${cy} Q ${qx} ${qy} ${ex} ${ey}`
+  const ux = dx / len
+  const uy = dy / len
+  const px = -uy
+  const py = ux
+  const sag = len * 0.36
+
+  const style = index % 3
+
+  if (style === 0) {
+    // Lazy S-curve — sweeps one side then the other
+    const c1x = cx + dx * 0.28 + px * sag * 1.0
+    const c1y = cy + dy * 0.28 + py * sag * 1.0 + 40
+    const c2x = cx + dx * 0.72 - px * sag * 0.8
+    const c2y = cy + dy * 0.72 - py * sag * 0.8 + 55
+    return `M ${cx} ${cy} C ${c1x} ${c1y} ${c2x} ${c2y} ${ex} ${ey}`
+  }
+
+  if (style === 1) {
+    // Heavy gravity droop — sags down like a clothesline
+    const c1x = cx + dx * 0.2
+    const c1y = cy + dy * 0.1 + sag * 1.5
+    const c2x = cx + dx * 0.8
+    const c2y = cy + dy * 0.9 + sag * 1.5
+    return `M ${cx} ${cy} C ${c1x} ${c1y} ${c2x} ${c2y} ${ex} ${ey}`
+  }
+
+  // style 2: gentle off-axis arc — leans perpendicular with loose slack
+  const c1x = cx + dx * 0.2 - px * sag * 0.7
+  const c1y = cy + dy * 0.2 - py * sag * 0.7 + 30
+  const c2x = cx + dx * 0.75 - px * sag * 1.1
+  const c2y = cy + dy * 0.75 - py * sag * 1.1 + 50
+  return `M ${cx} ${cy} C ${c1x} ${c1y} ${c2x} ${c2y} ${ex} ${ey}`
 }
+
+// Spring constants — tuned for a real-thread feel
+const STIFFNESS = 0.08
+const DAMPING   = 0.66
 
 function InfluencerNode({
   influencer,
@@ -44,26 +71,69 @@ function InfluencerNode({
   centerX: number
   centerY: number
 }) {
-  const router = useRouter()
-  const cardRef = useRef<HTMLDivElement>(null)
+  const router     = useRouter()
+  const cardRef    = useRef<HTMLDivElement>(null)
+
+  // Card position (moves instantly with pointer)
   const offsetX = useRef(0)
   const offsetY = useRef(0)
+
+  // Cord position (lags behind with spring)
+  const visualX = useRef(0)
+  const visualY = useRef(0)
+  const velX    = useRef(0)
+  const velY    = useRef(0)
+  const rafRef  = useRef<number | null>(null)
+
+  const dragging  = useRef(false)
   const dragStart = useRef({ mouseX: 0, mouseY: 0, offX: 0, offY: 0 })
-  const dragging = useRef(false)
   const totalMove = useRef(0)
 
-  const updateCords = (ox: number, oy: number) => {
-    const cardCX = initialX + ox + CARD_W / 2
-    const cardCY = initialY + oy + CARD_H / 2
+  const updateCordAt = (vx: number, vy: number) => {
+    const cardCX = initialX + vx + CARD_W / 2
+    const cardCY = initialY + vy + CARD_H / 2
     const d = computePath(centerX, centerY, cardCX, cardCY, index)
-    ;['base', 'mid', 'twist'].forEach(layer => {
-      const el = document.getElementById(`cord-${layer}-${influencer.id}`) as SVGPathElement | null
-      if (el) el.setAttribute('d', d)
-    })
+    const el = document.getElementById(`cord-${influencer.id}`) as SVGPathElement | null
+    if (el) el.setAttribute('d', d)
   }
 
-  // Set initial cord paths once mounted
-  useEffect(() => { updateCords(0, 0) }, []) // eslint-disable-line
+  const runSpring = () => {
+    const fx = (offsetX.current - visualX.current) * STIFFNESS
+    const fy = (offsetY.current - visualY.current) * STIFFNESS
+
+    velX.current = velX.current * DAMPING + fx
+    velY.current = velY.current * DAMPING + fy
+
+    visualX.current += velX.current
+    visualY.current += velY.current
+
+    updateCordAt(visualX.current, visualY.current)
+
+    const settled =
+      Math.abs(offsetX.current - visualX.current) < 0.25 &&
+      Math.abs(offsetY.current - visualY.current) < 0.25 &&
+      Math.abs(velX.current) < 0.25 &&
+      Math.abs(velY.current) < 0.25
+
+    if (!settled) {
+      rafRef.current = requestAnimationFrame(runSpring)
+    } else {
+      visualX.current = offsetX.current
+      visualY.current = offsetY.current
+      updateCordAt(offsetX.current, offsetY.current)
+      rafRef.current = null
+    }
+  }
+
+  const startSpring = () => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    rafRef.current = requestAnimationFrame(runSpring)
+  }
+
+  useEffect(() => {
+    updateCordAt(0, 0)
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
+  }, []) // eslint-disable-line
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     dragging.current = true
@@ -89,7 +159,7 @@ function InfluencerNode({
       cardRef.current.style.transform = `translate(${newX}px, ${newY}px) scale(1.04)`
       cardRef.current.style.zIndex = '50'
     }
-    updateCords(newX, newY)
+    startSpring()
   }
 
   const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -99,7 +169,8 @@ function InfluencerNode({
       cardRef.current.style.transform = `translate(${offsetX.current}px, ${offsetY.current}px) scale(1)`
       cardRef.current.style.zIndex = '10'
     }
-    // Navigate only if it was a tap, not a drag
+    // Let spring continue so cord bounces/oscillates before settling
+    startSpring()
     if (totalMove.current < 6) {
       router.push(`/influencer/${influencer.slug}`)
     }
@@ -192,11 +263,16 @@ export default function InfluencerBoard({ influencers }: { influencers: Influenc
       {/* SVG cords */}
       <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 5, overflow: 'visible' }}>
         {influencers.map((inf, i) => (
-          <g key={inf.id}>
-            <path id={`cord-base-${inf.id}`}  d={initialPaths[i]} stroke="#5a1008" strokeWidth="4"   fill="none" strokeLinecap="round" opacity="0.3"  />
-            <path id={`cord-mid-${inf.id}`}   d={initialPaths[i]} stroke="#c8382a" strokeWidth="2.4" fill="none" strokeLinecap="round" opacity="0.9"  />
-            <path id={`cord-twist-${inf.id}`} d={initialPaths[i]} stroke="#f07060" strokeWidth="0.8" fill="none" strokeLinecap="round" opacity="0.65" strokeDasharray="6 10" />
-          </g>
+          <path
+            key={inf.id}
+            id={`cord-${inf.id}`}
+            d={initialPaths[i]}
+            stroke="#c8382a"
+            strokeWidth="1.2"
+            fill="none"
+            strokeLinecap="round"
+            opacity="0.75"
+          />
         ))}
       </svg>
 
@@ -208,8 +284,8 @@ export default function InfluencerBoard({ influencers }: { influencers: Influenc
         filter: 'drop-shadow(0px 8px 16px rgba(0,0,0,0.18))',
         pointerEvents: 'none',
       }}>
-        <BgRemovedImage src="/head.png" width={130} />
-        <p style={{ fontFamily: 'var(--font-display)', fontSize: 10, fontWeight: 700, color: '#1a1a1a', marginTop: 4, letterSpacing: '0.05em' }}>
+        <Image src="/head.png" alt="Alex" width={130} height={163} style={{ width: 130, height: 'auto' }} />
+        <p style={{ fontFamily: 'var(--font-display)', fontSize: 10, fontWeight: 700, color: 'var(--t1)', marginTop: 4, letterSpacing: '0.05em' }}>
           @askhuston
         </p>
       </div>

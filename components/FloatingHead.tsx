@@ -1,12 +1,14 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import Image from 'next/image'
 import { useLoading } from '@/lib/loading-context'
 
 export default function FloatingHead() {
   const { loaded } = useLoading()
+  // If loaded is already true when this component mounts → return navigation, not first load
+  const isReturn = useRef(loaded)
 
   const rotateX = useMotionValue(0)
   const rotateY = useMotionValue(0)
@@ -39,9 +41,12 @@ export default function FloatingHead() {
         perspective: 400,
       }}
     >
-      {/* layoutId matches LoadingScreen — Framer Motion animates the face here */}
       <motion.div
-        layoutId="floating-head"
+        // On return navigation: fly in from left. On first load: layoutId handles it.
+        layoutId={isReturn.current ? undefined : 'floating-head'}
+        initial={isReturn.current ? { x: -280, opacity: 0, rotate: -8 } : undefined}
+        animate={isReturn.current ? { x: 0, opacity: 1, rotate: 0 } : undefined}
+        transition={{ duration: 0.7, ease: [0.19, 1, 0.22, 1], delay: 0.05 }}
         style={{ filter: 'drop-shadow(0px 12px 28px rgba(0,0,0,0.3))' }}
       >
         <motion.div style={{ rotateX: springX, rotateY: springY, transformStyle: 'preserve-3d' }}>
