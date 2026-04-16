@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import { useLoading } from '@/lib/loading-context'
 
 // ── Audio unlock + sound ──────────────────────────────────────────
 type AC = typeof AudioContext
@@ -68,25 +69,33 @@ const card: React.CSSProperties = {
 let shownThisLoad = false
 
 export default function IPhoneNotification() {
+  const { loaded } = useLoading()
   const [visible, setVisible] = useState(false)
   const [instant, setInstant] = useState(false)
   const [time, setTime] = useState('')
 
+  // Set time once on mount
   useEffect(() => {
     setTime(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }))
+  }, [])
 
-    // Return visit — show instantly, no sound
+  // Trigger notification when loading completes
+  useEffect(() => {
+    // Return visit (SPA nav back to home) — show instantly, no sound
     if (shownThisLoad) {
       setInstant(true)
       setVisible(true)
       return
     }
 
-    // First visit — show after short delay, play sound on first gesture
+    // Wait for loading screen to finish
+    if (!loaded) return
+
+    // Loading done — show after short pause
     const showTimer = setTimeout(() => {
       setVisible(true)
       shownThisLoad = true
-    }, 700)
+    }, 400)
 
     // Sound plays on first gesture (browser autoplay policy)
     let soundFired = false
@@ -105,7 +114,7 @@ export default function IPhoneNotification() {
       clearTimeout(showTimer)
       EVENTS.forEach(ev => document.removeEventListener(ev, onFirstGesture))
     }
-  }, [])
+  }, [loaded])
 
   return (
     <AnimatePresence>
